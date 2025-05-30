@@ -24,7 +24,7 @@ poetry --version
 ## Установка:
 - Клонируйте репозиторий:
 ```bash
-git clone git@github.com:Streiker-Saik/CourseProject3.git
+git clone git@github.com:Streiker-Saik/OnlineStore_Django.git
 ```
 - Перейдите в директорию проекта:
 ```
