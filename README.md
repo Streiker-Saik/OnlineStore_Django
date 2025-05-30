@@ -2,7 +2,7 @@
 
 ## Описание:
 
-...
+Разработка приложения(веб-сайта) онлайн магазина, с помощью фреймворка Django.
 
 ## Проверить версию Python:
 
@@ -37,13 +37,57 @@ poetry add --group lint flake8 black isort mypy
 poetry add --group dev django
 ```
 
-# Модули:
-## ...
-...
-```
-...
+## Запуск проекта:
+Чтобы запустить сервер разработки, выполните следующую команду:
+```bash
+python manage.py runserver
 ```
 
+## Структура проекта:
+```
+OnlineStore_Django/
+├── catalog/ #приложение каталог
+|   ├── migrations/
+|   |   └── __init__.py
+|   ├── templates/ #шаблоны html
+|   |   └── catalog/
+|   |   |   ├── contact.html
+|   |   |   └── home.html
+|   ├── __init__.py
+|   ├── admin.py
+|   ├── apps.py
+|   ├── models.py
+|   ├── tests.py
+|   └── urls.py
+|   └── views.py
+├── config/
+|   ├── __init__.py
+|   ├── asgi.py
+|   ├── settings.py
+|   ├── urls.py
+|   └── wsgi.py
+├── static/
+|   ├── css/
+|   ├── js/
+├── .env
+├── .gitignore
+├── manage.py
+├── poetry.lock
+├── pypproject.toml
+└── README.md
+```
+
+# APP:
+## catalog
+### home
+```
+GET: Шаблон HTML главной страницы
+```
+### contact
+```
+GET: Шаблон HTML страницы контактов
+POST: Возвращает сообщение при успешном отправке данных из формы
+```
 
 ## Тестирование:
 Этот проект использует pytest для тестирования. Чтобы запустить тесты, выполните следующие шаги:
