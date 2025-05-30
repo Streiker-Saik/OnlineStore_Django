@@ -32,7 +32,7 @@ cd "ваш-репозиторий"
 ```
 - Установите необходимые зависимости:
 ```bash
-
+poetry add python-dotenv
 poetry add --group lint flake8 black isort mypy
 poetry add --group dev django
 ```
