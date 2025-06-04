@@ -13,7 +13,6 @@
   - [Views](#views)
     - [home](#home)
     - [contact](#contact)
-- [Тестирование](#тестирование) 
 
 ## Описание:
 
@@ -48,7 +47,7 @@ cd "ваш-репозиторий"
 - Установите необходимые зависимости:
 ```bash
 poetry add python-dotenv psycopg2 pillow
-poetry add --group lint flake8 black isort mypy
+poetry add --group lint flake8 black isort mypy ipython
 poetry add --group dev django
 ```
 - Зайдите в файл .env.example и следуйте инструкция
