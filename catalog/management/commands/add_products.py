@@ -4,11 +4,11 @@ from catalog.models import Category, Product
 
 
 class Command(BaseCommand):
-    """Команда для добавления тестовых продуктов"""
+    """Команда для добавления продуктов из fixture"""
     help = "Add test products to the database"
 
     def handle(self, *args, **options) -> None:
-        """Обрабатывает команду для добавления тестовых продуктов в базу данных"""
+        """Обрабатывает команду для добавления продуктов в базу данных"""
         # Удаляем все существующие категории и продукты
         Category.objects.all().delete()
         Product.objects.all().delete()

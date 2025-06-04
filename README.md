@@ -13,6 +13,11 @@
   - [Views](#views)
     - [home](#home)
     - [contact](#contact)
+  - [Admin](#admin)
+    - [CategoryAdmin](#categoryadmin)
+    - [ProductAdmin](#productadmin)
+- [Кастомные команды](#кастомные-команды)
+
 
 ## Описание:
 
@@ -62,7 +67,13 @@ python manage.py runserver
 ```
 OnlineStore_Django/
 ├── catalog/ #приложение каталог
+|   ├── management/
+|   |   └── commands/
+|   |   |   ├── __init__.py
+|   |   |   └── add_products.py
 |   ├── migrations/ #пакет миграции моделей
+|   |   ├── 0001_initial.py
+|   |   ├── ...
 |   |   └── __init__.py
 |   ├── templates/ #шаблоны html
 |   |   └── catalog/
@@ -89,8 +100,10 @@ OnlineStore_Django/
 |   ├── js/
 ├── .env
 ├── .gitignore
+├── category_fixture.json # фикстура catalog.Category
 ├── manage.py
 ├── poetry.lock
+├── product_fixture.json # фикстура catalog.Product
 ├── pypproject.toml
 └── README.md
 ```
@@ -119,3 +132,24 @@ OnlineStore_Django/
 ### contact:
 - GET: Шаблон HTML страницы контактов
 - POST: Возвращает сообщение при успешном отправке данных из формы
+
+## Admin
+### CategoryAdmin
+Класс для работы администратора с категориями
+- Вывод на дисплей: **id** и **name**(название категории)
+- Поиск по **name**(имени) и **description**(описанию)
+### ProductAdmin
+Класс для работы администратора с продуктами
+- Вывод на дисплей: **id**, **name**(название продукта), **price**(цена) и **category**(категория)
+- Фильтрация по **category**(категории)
+- Поиск по **name**(имени) и **description**(описанию)
+
+
+## Кастомные команды
+### add_product
+Команда для добавления продуктов из fixture
+- 'category_fixture.json'
+- 'product_fixture.json'
+```bash
+python manage.py add_products
+```
