@@ -47,7 +47,7 @@ cd "ваш-репозиторий"
 ```
 - Установите необходимые зависимости:
 ```bash
-poetry add python-dotenv psycopg2
+poetry add python-dotenv psycopg2 pillow
 poetry add --group lint flake8 black isort mypy
 poetry add --group dev django
 ```
@@ -63,7 +63,7 @@ python manage.py runserver
 ```
 OnlineStore_Django/
 ├── catalog/ #приложение каталог
-|   ├── migrations/
+|   ├── migrations/ #пакет миграции моделей
 |   |   └── __init__.py
 |   ├── templates/ #шаблоны html
 |   |   └── catalog/
@@ -72,16 +72,19 @@ OnlineStore_Django/
 |   ├── __init__.py
 |   ├── admin.py
 |   ├── apps.py
-|   ├── models.py
-|   ├── tests.py
+|   ├── models.py #модели БД
+|   ├── tests.py 
 |   └── urls.py
-|   └── views.py
+|   └── views.py #конструктор
 ├── config/
 |   ├── __init__.py
 |   ├── asgi.py
 |   ├── settings.py
 |   ├── urls.py
 |   └── wsgi.py
+├── media/
+|   ├── css/
+|   ├── js/
 ├── static/
 |   ├── css/
 |   ├── js/
