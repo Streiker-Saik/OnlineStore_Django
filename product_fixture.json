@@ -1,0 +1,54 @@
+[
+{
+    "model": "catalog.product",
+    "pk": 1,
+    "fields": {
+        "name": "Смартфон",
+        "description": "Современный смартфон с большим экраном и хорошей камерой",
+        "image": "",
+        "category": 1,
+        "price": "499.99",
+        "created_at": "2025-06-04T11:46:25.521Z",
+        "updated_at": "2025-06-04T11:46:25.521Z"
+    }
+},
+{
+    "model": "catalog.product",
+    "pk": 2,
+    "fields": {
+        "name": "Наушники",
+        "description": "Беспроводные наушники с высоким качеством звука",
+        "image": "",
+        "category": 1,
+        "price": "89.50",
+        "created_at": "2025-06-04T11:47:53.190Z",
+        "updated_at": "2025-06-04T11:47:53.190Z"
+    }
+},
+{
+    "model": "catalog.product",
+    "pk": 4,
+    "fields": {
+        "name": "Джинсы",
+        "description": "Стильные джинсы, идеально подходящие для любого случая",
+        "image": "",
+        "category": 2,
+        "price": "45.00",
+        "created_at": "2025-06-04T11:51:40.481Z",
+        "updated_at": "2025-06-04T11:51:40.481Z"
+    }
+},
+{
+    "model": "catalog.product",
+    "pk": 5,
+    "fields": {
+        "name": "Роман о любви",
+        "description": "Захватывающий роман, который не оставит вас равнодушным",
+        "image": "",
+        "category": 3,
+        "price": "15.75",
+        "created_at": "2025-06-04T11:52:55.106Z",
+        "updated_at": "2025-06-04T11:52:55.106Z"
+    }
+}
+]

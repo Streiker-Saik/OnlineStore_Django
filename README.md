@@ -1,5 +1,25 @@
 # Проект "Приложение онлайн магазина с помощью Django"
 
+- [Описание](#описание)
+- [Проверить версию Python](#проверить-версию-python)
+- [Установка Poetry](#установка-poetry)
+- [Установка](#установка)
+- [Запуск проекта](#запуск-проекта)
+- [Структура проекта](#структура-проекта)
+- [Приложение catalog](#приложение-catalog)
+  - [Models](#models)
+    - [Model_Category](#model_category)
+    - [Model_Product](#model_product)
+    - [Model_Contact](#model_contact)
+  - [Views](#views)
+    - [home](#home)
+    - [contact](#contact)
+  - [Admin](#admin)
+    - [CategoryAdmin](#categoryadmin)
+    - [ProductAdmin](#productadmin)
+- [Кастомные команды](#кастомные-команды)
+
+
 ## Описание:
 
 Разработка приложения(веб-сайта) онлайн магазина, с помощью фреймворка Django.
@@ -32,10 +52,11 @@ cd "ваш-репозиторий"
 ```
 - Установите необходимые зависимости:
 ```bash
-poetry add python-dotenv
-poetry add --group lint flake8 black isort mypy
+poetry add python-dotenv psycopg2 pillow
+poetry add --group lint flake8 black isort mypy ipython
 poetry add --group dev django
 ```
+- Зайдите в файл .env.example и следуйте инструкция
 
 ## Запуск проекта:
 Чтобы запустить сервер разработки, выполните следующую команду:
@@ -46,61 +67,98 @@ python manage.py runserver
 ## Структура проекта:
 ```
 OnlineStore_Django/
-├── catalog/ #приложение каталог
-|   ├── migrations/
+├── catalog/ # приложение каталог
+|   ├── management/ # кастомные команды
+|   |   └── commands/
+|   |   |   ├── __init__.py
+|   |   |   └── add_products.py
+|   ├── migrations/ # пакет миграции моделей
+|   |   ├── 0001_initial.py
+|   |   ├── ...
 |   |   └── __init__.py
-|   ├── templates/ #шаблоны html
+|   ├── templates/ # шаблоны html
 |   |   └── catalog/
 |   |   |   ├── contact.html
 |   |   |   └── home.html
 |   ├── __init__.py
-|   ├── admin.py
+|   ├── admin.py # регистрация моделе в админке
 |   ├── apps.py
-|   ├── models.py
-|   ├── tests.py
-|   └── urls.py
-|   └── views.py
+|   ├── models.py # модели БД
+|   ├── tests.py 
+|   └── urls.py # маршрутизация приложения
+|   └── views.py # конструктор контроллеров
 ├── config/
 |   ├── __init__.py
 |   ├── asgi.py
 |   ├── settings.py
-|   ├── urls.py
+|   ├── urls.py # маршрутизация проета
 |   └── wsgi.py
+├── media/
+|   └── image/
 ├── static/
 |   ├── css/
-|   ├── js/
+|   └── js/
 ├── .env
 ├── .gitignore
+├── category_fixture.json # фикстура catalog.Category
 ├── manage.py
 ├── poetry.lock
+├── product_fixture.json # фикстура catalog.Product
 ├── pypproject.toml
 └── README.md
 ```
 
-# APP:
-## catalog
-### home
-```
-GET: Шаблон HTML главной страницы
-```
-### contact
-```
-GET: Шаблон HTML страницы контактов
-POST: Возвращает сообщение при успешном отправке данных из формы
-```
+# Приложение catalog:
+### Models
+- **Category**: Модель представляющая категорию
+- **Product**: Модель, представляющая продукт
+### Model_Category
+- **name**: Название категории
+- **description**: Описание категории
+### Model_Product
+- **name**: Наименование продукта
+- **description**: Описание продукта
+- **image**: Изображение продукта
+- **category**: Связь с категорией, к которой принадлежит продукт
+- **price**: Цена продукта
+- **created_at**: Дата и время создания продукта
+- **updated_at**: Дата и время последнего изменения продукта
+### Model_Contact
+- **name**: Имя
+- **phone**: Номер телефона
+- **message**: Сообщение
+- **created_at**: Дата создания
 
-## Тестирование:
-Этот проект использует pytest для тестирования. Чтобы запустить тесты, выполните следующие шаги:
+## Views
+### home:
+- GET: Шаблон HTML главной страницы
+вывод в консоль 5 последних добавленных продуктов
+### contact:
+- GET: Шаблон HTML страницы контактов
+- POST: Возвращает сообщение при успешном отправке данных из формы
+Заполнение формы и отправка заполняет БД контакты
 
-- Запустите тесты с помощью команды:
+## Admin
+### CategoryAdmin
+Класс для работы администратора с категориями
+- Вывод на дисплей: **id** и **name**(название категории)
+- Поиск по **name**(имени) и **description**(описанию)
+### ProductAdmin
+Класс для работы администратора с продуктами
+- Вывод на дисплей: **id**, **name**(название продукта), **price**(цена) и **category**(категория)
+- Фильтрация по **category**(категории)
+- Поиск по **name**(имени) и **description**(описанию)
+### ContactAdmin
+Класс для работы администратора с контактами
+- Вывод на дисплей: **name**(имя человека), **phone**(контактный телефон), **message**(сообщение)
+- Фильтрация по **created_at**(дате создания)
+- Сортировка по **name**(имя человек)
+
+## Кастомные команды
+### add_product
+Команда для добавления продуктов из fixture
+- 'category_fixture.json'
+- 'product_fixture.json'
 ```bash
-pytest
-```
-- Для получения подробного отчета о тестировании запустите:
-```bash
-pytest -v
-```
-- Запустите mypy для проверки типов:
-```
-mypy "ваш_скрипт".py
+python manage.py add_products
 ```
