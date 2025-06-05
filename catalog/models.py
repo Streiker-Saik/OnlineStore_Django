@@ -58,3 +58,25 @@ class Product(models.Model):
         verbose_name = "продукт"
         verbose_name_plural = "продукты"
         ordering = ["name"]
+
+
+class Contact(models.Model):
+    """
+    Модель, предоставления контактных данных
+    """
+    name = models.CharField(max_length=100, verbose_name="Имя")
+    phone = models.CharField(max_length=20, verbose_name="Номер телефона")
+    message = models.TextField(verbose_name="Сообщение")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+
+    def __str__(self) -> str:
+        """
+        Строковое представление контактных данных
+        :return: Наименование категории
+        """
+        return f"{self.name}: {self.phone}"
+
+    class Meta:
+        verbose_name = "контакт"
+        verbose_name_plural = "контакты"
+        ordering = ["name"]

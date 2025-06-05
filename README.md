@@ -10,6 +10,7 @@
   - [Models](#models)
     - [Model_Category](#model_category)
     - [Model_Product](#model_product)
+    - [Model_Contact](#model_contact)
   - [Views](#views)
     - [home](#home)
     - [contact](#contact)
@@ -66,38 +67,37 @@ python manage.py runserver
 ## Структура проекта:
 ```
 OnlineStore_Django/
-├── catalog/ #приложение каталог
-|   ├── management/
+├── catalog/ # приложение каталог
+|   ├── management/ # кастомные команды
 |   |   └── commands/
 |   |   |   ├── __init__.py
 |   |   |   └── add_products.py
-|   ├── migrations/ #пакет миграции моделей
+|   ├── migrations/ # пакет миграции моделей
 |   |   ├── 0001_initial.py
 |   |   ├── ...
 |   |   └── __init__.py
-|   ├── templates/ #шаблоны html
+|   ├── templates/ # шаблоны html
 |   |   └── catalog/
 |   |   |   ├── contact.html
 |   |   |   └── home.html
 |   ├── __init__.py
-|   ├── admin.py
+|   ├── admin.py # регистрация моделе в админке
 |   ├── apps.py
-|   ├── models.py #модели БД
+|   ├── models.py # модели БД
 |   ├── tests.py 
-|   └── urls.py
-|   └── views.py #конструктор
+|   └── urls.py # маршрутизация приложения
+|   └── views.py # конструктор контроллеров
 ├── config/
 |   ├── __init__.py
 |   ├── asgi.py
 |   ├── settings.py
-|   ├── urls.py
+|   ├── urls.py # маршрутизация проета
 |   └── wsgi.py
 ├── media/
-|   ├── css/
-|   ├── js/
+|   └── image/
 ├── static/
 |   ├── css/
-|   ├── js/
+|   └── js/
 ├── .env
 ├── .gitignore
 ├── category_fixture.json # фикстура catalog.Category
@@ -112,11 +112,9 @@ OnlineStore_Django/
 ### Models
 - **Category**: Модель представляющая категорию
 - **Product**: Модель, представляющая продукт
-
 ### Model_Category
 - **name**: Название категории
 - **description**: Описание категории
-
 ### Model_Product
 - **name**: Наименование продукта
 - **description**: Описание продукта
@@ -125,13 +123,20 @@ OnlineStore_Django/
 - **price**: Цена продукта
 - **created_at**: Дата и время создания продукта
 - **updated_at**: Дата и время последнего изменения продукта
+### Model_Contact
+- **name**: Имя
+- **phone**: Номер телефона
+- **message**: Сообщение
+- **created_at**: Дата создания
 
 ## Views
 ### home:
 - GET: Шаблон HTML главной страницы
+вывод в консоль 5 последних добавленных продуктов
 ### contact:
 - GET: Шаблон HTML страницы контактов
 - POST: Возвращает сообщение при успешном отправке данных из формы
+Заполнение формы и отправка заполняет БД контакты
 
 ## Admin
 ### CategoryAdmin
@@ -143,7 +148,11 @@ OnlineStore_Django/
 - Вывод на дисплей: **id**, **name**(название продукта), **price**(цена) и **category**(категория)
 - Фильтрация по **category**(категории)
 - Поиск по **name**(имени) и **description**(описанию)
-
+### ContactAdmin
+Класс для работы администратора с контактами
+- Вывод на дисплей: **name**(имя человека), **phone**(контактный телефон), **message**(сообщение)
+- Фильтрация по **created_at**(дате создания)
+- Сортировка по **name**(имя человек)
 
 ## Кастомные команды
 ### add_product
