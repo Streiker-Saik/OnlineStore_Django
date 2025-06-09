@@ -10,17 +10,9 @@ def home(request: HttpRequest) -> HttpResponse:
     :param request: Экземпляр HttpRequest.
     :return: HTML шаблон главной страницы
     """
-    products = Product.objects.order_by('-created_at')[:5]
-    for product in products:
-        product_dict = {
-            "name": product.name,
-            "description": product.description,
-            "image": product.image,
-            "category": product.category.name, # product.category_id | product.category.name
-            "price": product.price,
-        }
-        print(product_dict)
-    return render(request,'catalog/home.html')
+    products = Product.objects.all().order_by('-updated_at')
+    context = {"products": products}
+    return render(request,'catalog/home.html', context)
 
 
 def contacts(request: HttpRequest) -> HttpResponse:
@@ -40,7 +32,6 @@ def contacts(request: HttpRequest) -> HttpResponse:
     return render(request, 'catalog/contacts.html')
 
 
-
 def product_detail(request: HttpRequest, product_id: int) -> HttpResponse:
     """
     Обрабатывает страницу информации о продукте
@@ -51,4 +42,3 @@ def product_detail(request: HttpRequest, product_id: int) -> HttpResponse:
     product = Product.objects.get(pk=product_id)
     context = {'product': product}
     return render(request, 'catalog/product_detail.html', context)
-
