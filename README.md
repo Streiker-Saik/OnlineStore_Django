@@ -48,9 +48,28 @@ git clone git@github.com:Streiker-Saik/OnlineStore_Django.git
 ```
 - Перейдите в директорию проекта:
 ```
-cd "ваш-репозиторий"
+cd OnlineStore_Django
+```
+### При использовании PIP:
+- Активируйте виртуальное окружение
+```
+python -m venv <имя_вашего окружения>
+<имя_вашего_окружения>\Scripts\activate
+```
+- Установите зависимости
+```
+pip install -r requirements.txt
+```
+### При использование POETRY:
+- Активируйте виртуальное окружение
+```bash
+poetry shell
 ```
 - Установите необходимые зависимости:
+```bash
+poetry install
+```
+или
 ```bash
 poetry add python-dotenv psycopg2 pillow
 poetry add --group lint flake8 black isort mypy ipython
