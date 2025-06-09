@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Информация о продукте</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>{{ product.name }}</h1>
+    <p>Описание: {{product.description|truncatechars:100}}</p>
+    <p>Изображение: {{product.image|default:"Изображение отсутствует"}}</p>
+    <p>Категория: {{product.category.name}}</p>
+    <p>Цена: {{product.price}} $</p>
+    <p>Создан: {{product.created_at|date:"d M Y"}}</p>
+    <p>Изменен: {{product.updated_at|date:"d M Y"}}</p>
+</div>
+<script src="/static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

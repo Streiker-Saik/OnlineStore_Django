@@ -7,16 +7,18 @@
 - [Запуск проекта](#запуск-проекта)
 - [Структура проекта](#структура-проекта)
 - [Приложение catalog](#приложение-catalog)
+  - [Admin](#admin)
+    - [CategoryAdmin](#categoryadmin)
+    - [ProductAdmin](#productadmin)
   - [Models](#models)
     - [Model_Category](#model_category)
     - [Model_Product](#model_product)
     - [Model_Contact](#model_contact)
+  - [Urls](#urls)
   - [Views](#views)
-    - [home](#home)
     - [contact](#contact)
-  - [Admin](#admin)
-    - [CategoryAdmin](#categoryadmin)
-    - [ProductAdmin](#productadmin)
+    - [home](#home)
+    - [product_detail](#product_detail)
 - [Кастомные команды](#кастомные-команды)
 
 
@@ -98,7 +100,8 @@ OnlineStore_Django/
 |   ├── templates/ # шаблоны html
 |   |   └── catalog/
 |   |   |   ├── contact.html
-|   |   |   └── home.html
+|   |   |   ├── home.html
+|   |   |   └── product_detail.html
 |   ├── __init__.py
 |   ├── admin.py # регистрация моделе в админке
 |   ├── apps.py
@@ -127,8 +130,26 @@ OnlineStore_Django/
 └── README.md
 ```
 
+
+## Admin
+### CategoryAdmin
+Класс для работы администратора с категориями
+- Вывод на дисплей: **id** и **name**(название категории)
+- Поиск по **name**(имени) и **description**(описанию)
+### ProductAdmin
+Класс для работы администратора с продуктами
+- Вывод на дисплей: **id**, **name**(название продукта), **price**(цена) и **category**(категория)
+- Фильтрация по **category**(категории)
+- Поиск по **name**(имени) и **description**(описанию)
+### ContactAdmin
+Класс для работы администратора с контактами
+- Вывод на дисплей: **name**(имя человека), **phone**(контактный телефон), **message**(сообщение)
+- Фильтрация по **created_at**(дате создания)
+- Сортировка по **name**(имя человек)
 # Приложение catalog:
-### Models
+
+
+## Models
 - **Category**: Модель представляющая категорию
 - **Product**: Модель, представляющая продукт
 ### Model_Category
@@ -148,6 +169,15 @@ OnlineStore_Django/
 - **message**: Сообщение
 - **created_at**: Дата создания
 
+
+## Urls:
+- **Главная страница:** http://127.0.0.1:8000/ - 
+- **Домашняя страниц(главная страница):** http://127.0.0.1:8000/home/
+- **Cтраница контактов:** http://127.0.0.1:8000/contacts/ 
+- **Страница информации о продукте:** http://127.0.0.1:8000/product_detail/(product_id)/
+  - где (product_id) - это, целое число, ID продукта
+
+
 ## Views
 ### home:
 - GET: Шаблон HTML главной страницы
@@ -156,22 +186,9 @@ OnlineStore_Django/
 - GET: Шаблон HTML страницы контактов
 - POST: Возвращает сообщение при успешном отправке данных из формы
 Заполнение формы и отправка заполняет БД контакты
+### product_detail:
+- GET: Шаблон HTML информации о продукте
 
-## Admin
-### CategoryAdmin
-Класс для работы администратора с категориями
-- Вывод на дисплей: **id** и **name**(название категории)
-- Поиск по **name**(имени) и **description**(описанию)
-### ProductAdmin
-Класс для работы администратора с продуктами
-- Вывод на дисплей: **id**, **name**(название продукта), **price**(цена) и **category**(категория)
-- Фильтрация по **category**(категории)
-- Поиск по **name**(имени) и **description**(описанию)
-### ContactAdmin
-Класс для работы администратора с контактами
-- Вывод на дисплей: **name**(имя человека), **phone**(контактный телефон), **message**(сообщение)
-- Фильтрация по **created_at**(дате создания)
-- Сортировка по **name**(имя человек)
 
 ## Кастомные команды
 ### add_product
