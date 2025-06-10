@@ -99,9 +99,12 @@ OnlineStore_Django/
 |   |   └── __init__.py
 |   ├── templates/ # шаблоны html
 |   |   └── catalog/
+|   |   |   ├── base.html # базовый шаблон
 |   |   |   ├── contact.html
 |   |   |   ├── home.html
 |   |   |   └── product_detail.html
+|   ├── templatetags/ 
+|   |   └── my_tags.py
 |   ├── __init__.py
 |   ├── admin.py # регистрация моделе в админке
 |   ├── apps.py
@@ -116,7 +119,7 @@ OnlineStore_Django/
 |   ├── urls.py # маршрутизация проета
 |   └── wsgi.py
 ├── media/
-|   └── image/
+|   └── 
 ├── static/
 |   ├── css/
 |   └── js/
@@ -172,10 +175,10 @@ OnlineStore_Django/
 
 ## Urls:
 - **Главная страница:** http://127.0.0.1:8000/ - 
-- **Домашняя страниц(главная страница):** http://127.0.0.1:8000/home/
+- **Страница для администратора:** http://127.0.0.1:8000/admin/
 - **Cтраница контактов:** http://127.0.0.1:8000/contacts/ 
-- **Страница информации о продукте:** http://127.0.0.1:8000/product_detail/(product_id)/
-  - где (product_id) - это, целое число, ID продукта
+- **Страница информации о продукте:** http://127.0.0.1:8000/product_detail/(pk)/
+  - где (pk) - это, целое число PrimaryKey, ID продукта
 
 
 ## Views
@@ -186,6 +189,7 @@ OnlineStore_Django/
 - POST: Возвращает сообщение при успешном отправке данных из формы
 Заполнение формы и отправка заполняет БД контакты
 ### product_detail:
+Принимает PrimaryKey продукта
 - GET: Шаблон HTML информации о продукте
 
 

@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
@@ -11,6 +12,9 @@ def home(request: HttpRequest) -> HttpResponse:
     :return: HTML шаблон главной страницы
     """
     products = Product.objects.all().order_by('-updated_at')
+    paginator = Paginator(products, 1)
+    page_number = request.GET.get('page') # получаем номер страницы
+    products = paginator.get_page(page_number)
     context = {"products": products}
     return render(request,'catalog/home.html', context)
 
@@ -32,13 +36,13 @@ def contacts(request: HttpRequest) -> HttpResponse:
     return render(request, 'catalog/contacts.html')
 
 
-def product_detail(request: HttpRequest, product_id: int) -> HttpResponse:
+def product_detail(request: HttpRequest, pk: int) -> HttpResponse:
     """
     Обрабатывает страницу информации о продукте
     :param request: Экземпляр HttpRequest.
-    :param product_id: ID продукта, (PrimaryKey)
+    :param pk: ID продукта (PrimaryKey)
     :return: HTML шаблон информации о продукте
     """
-    product = Product.objects.get(pk=product_id)
+    product = Product.objects.get(pk=pk)
     context = {'product': product}
     return render(request, 'catalog/product_detail.html', context)
