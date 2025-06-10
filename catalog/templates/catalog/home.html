@@ -3,16 +3,18 @@
 
 {% block title %}Главная страница{% endblock %}
 
+{% load my_tags %}
 {% block content %}
 <div class="row text-center">
     {% for product in products %}
     <div class="col-3">
         <div class="card mb-4 box-shadow">
             <div class="card-header">
-                <h4 class="my-0 font-weight-normal">{{product.name}}</h4>
+                <h4 class="my-0 font-weight-normal">{{product.name|truncatechars:20}}</h4>
             </div>
             <div class="card-body">
-                <h1 class="card-title pricing-card-title">$ {{product.price}}</h1>
+                <img src="{{ product.image | media_filter }}" class="img-thumbnail" style="max-width: 100; height: auto;" alt="{{ product.name }}">
+                <h1 class="card-title pricing-card-title">{{product.price}} руб</h1>
                 <ul class="list-unstyled mt-3 mb-4 text-start m-3">
                     <li>Категория: {{product.category.name}}</li>
                     <li>Описание: {{product.description|truncatechars:100}}</li>
@@ -26,4 +28,29 @@
     </div>
     {% endfor %}
 </div>
+<! --страницы-- >
+<nav aria-label="...">
+    <ul class="pagination pagination-lg">
+        {% if products.has_previous %}
+        <li class="page-item">
+            <a class="page-link" aria-current="page" href="?page=1">Начало</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" aria-current="page" href="?page={{ products.previous_page_number }}">
+                {{ products.previous_page_number }}
+            </a>
+        </li>
+        {% endif%}
+        <li class="page-item active">
+            <a class="page-link" aria-current="page" href="?page={{ products.number }}">{{ products.number }}</a>
+        </li>
+        {% if products.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ products.next_page_number }}">
+                {{products.next_page_number }}
+            </a>
+        </li>
+        {% endif%}
+    </ul>
+</nav>
 {% endblock %}

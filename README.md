@@ -101,7 +101,10 @@ OnlineStore_Django/
 |   |   └── catalog/
 |   |   |   ├── base.html # базовый шаблон
 |   |   |   ├── contact.html
+|   |   |   ├── footer.html # нижняя часть страницы
+|   |   |   ├── header.html # верхняя часть страницы(меню)
 |   |   |   ├── home.html
+|   |   |   ├── product_add.html
 |   |   |   └── product_detail.html
 |   ├── templatetags/ 
 |   |   └── my_tags.py
@@ -119,7 +122,8 @@ OnlineStore_Django/
 |   ├── urls.py # маршрутизация проета
 |   └── wsgi.py
 ├── media/
-|   └── 
+|   └── images/
+|   |   └── ...
 ├── static/
 |   ├── css/
 |   └── js/
@@ -133,7 +137,7 @@ OnlineStore_Django/
 └── README.md
 ```
 
-
+# Приложение catalog:
 ## Admin
 ### CategoryAdmin
 Класс для работы администратора с категориями
@@ -149,7 +153,6 @@ OnlineStore_Django/
 - Вывод на дисплей: **name**(имя человека), **phone**(контактный телефон), **message**(сообщение)
 - Фильтрация по **created_at**(дате создания)
 - Сортировка по **name**(имя человек)
-# Приложение catalog:
 
 
 ## Models
@@ -179,11 +182,13 @@ OnlineStore_Django/
 - **Cтраница контактов:** http://127.0.0.1:8000/contacts/ 
 - **Страница информации о продукте:** http://127.0.0.1:8000/product_detail/(pk)/
   - где (pk) - это, целое число PrimaryKey, ID продукта
+- **Страница добавления продукта:** http://127.0.0.1:8000/product_add/
 
 
 ## Views
 ### home:
 - GET: Шаблон HTML главной страницы
+Со страницами по 4 продуктами
 ### contact:
 - GET: Шаблон HTML страницы контактов
 - POST: Возвращает сообщение при успешном отправке данных из формы
@@ -191,6 +196,10 @@ OnlineStore_Django/
 ### product_detail:
 Принимает PrimaryKey продукта
 - GET: Шаблон HTML информации о продукте
+### product_add:
+- GET: Шаблон HTML страницы добавления продукта
+- POST: Возвращает сообщение при успешном отправке данных из формы
+Заполнение формы и отправка заполняет БД продукты
 
 
 ## Кастомные команды
