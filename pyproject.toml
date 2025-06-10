@@ -3,7 +3,7 @@ name = "onlinestore-django"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Your Name",email = "you@example.com"}
+    {name = "Alexei",email = "streiker.saik@gmail.com"}
 ]
 readme = "README.md"
 requires-python = ">=3.13"
