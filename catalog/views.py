@@ -1,8 +1,7 @@
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
-
+from django.shortcuts import render, get_object_or_404
 
 from catalog.models import Product, Contact, Category
 
@@ -45,8 +44,8 @@ def product_detail(request: HttpRequest, pk: int) -> HttpResponse:
     :param pk: ID продукта (PrimaryKey)
     :return: HTML шаблон информации о продукте
     """
-    product = Product.objects.get(pk=pk)
-    context = {'product': product}
+    product = get_object_or_404(Product, pk=pk)
+    context = {'product': product, 'category': product.category}
     return render(request, 'catalog/product_detail.html', context)
 
 

@@ -9,7 +9,7 @@
     <h1>{{ product.name }}</h1>
     <img src="{{ product.image | media_filter }}" class="img-thumbnail" style="max-width: 200px; height: auto;" alt="{{ product.name }}">
     <p>Описание: {{product.description}}</p>
-    <p>Категория: {{product.category.name}}</p>
+    <p>Категория: {{category.name}}</p>
     <p>Цена: {{product.price}} руб</p>
     <p>Создан: {{product.created_at|date:"d M Y"}}</p>
     <p>Изменен: {{product.updated_at|date:"d M Y"}}</p>
