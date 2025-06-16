@@ -7,16 +7,18 @@
 - [Запуск проекта](#запуск-проекта)
 - [Структура проекта](#структура-проекта)
 - [Приложение catalog](#приложение-catalog)
+  - [Admin](#admin)
+    - [CategoryAdmin](#categoryadmin)
+    - [ProductAdmin](#productadmin)
   - [Models](#models)
     - [Model_Category](#model_category)
     - [Model_Product](#model_product)
     - [Model_Contact](#model_contact)
+  - [Urls](#urls)
   - [Views](#views)
-    - [home](#home)
     - [contact](#contact)
-  - [Admin](#admin)
-    - [CategoryAdmin](#categoryadmin)
-    - [ProductAdmin](#productadmin)
+    - [home](#home)
+    - [product_detail](#product_detail)
 - [Кастомные команды](#кастомные-команды)
 
 
@@ -48,9 +50,28 @@ git clone git@github.com:Streiker-Saik/OnlineStore_Django.git
 ```
 - Перейдите в директорию проекта:
 ```
-cd "ваш-репозиторий"
+cd OnlineStore_Django
+```
+### При использовании PIP:
+- Активируйте виртуальное окружение
+```
+python -m venv <имя_вашего окружения>
+<имя_вашего_окружения>\Scripts\activate
+```
+- Установите зависимости
+```
+pip install -r requirements.txt
+```
+### При использование POETRY:
+- Активируйте виртуальное окружение
+```bash
+poetry shell
 ```
 - Установите необходимые зависимости:
+```bash
+poetry install
+```
+или
 ```bash
 poetry add python-dotenv psycopg2 pillow
 poetry add --group lint flake8 black isort mypy ipython
@@ -78,8 +99,15 @@ OnlineStore_Django/
 |   |   └── __init__.py
 |   ├── templates/ # шаблоны html
 |   |   └── catalog/
+|   |   |   ├── base.html # базовый шаблон
 |   |   |   ├── contact.html
-|   |   |   └── home.html
+|   |   |   ├── footer.html # нижняя часть страницы
+|   |   |   ├── header.html # верхняя часть страницы(меню)
+|   |   |   ├── home.html
+|   |   |   ├── product_add.html
+|   |   |   └── product_detail.html
+|   ├── templatetags/ 
+|   |   └── my_tags.py
 |   ├── __init__.py
 |   ├── admin.py # регистрация моделе в админке
 |   ├── apps.py
@@ -94,7 +122,8 @@ OnlineStore_Django/
 |   ├── urls.py # маршрутизация проета
 |   └── wsgi.py
 ├── media/
-|   └── image/
+|   └── images/
+|   |   └── ...
 ├── static/
 |   ├── css/
 |   └── js/
@@ -109,7 +138,24 @@ OnlineStore_Django/
 ```
 
 # Приложение catalog:
-### Models
+## Admin
+### CategoryAdmin
+Класс для работы администратора с категориями
+- Вывод на дисплей: **id** и **name**(название категории)
+- Поиск по **name**(имени) и **description**(описанию)
+### ProductAdmin
+Класс для работы администратора с продуктами
+- Вывод на дисплей: **id**, **name**(название продукта), **price**(цена) и **category**(категория)
+- Фильтрация по **category**(категории)
+- Поиск по **name**(имени) и **description**(описанию)
+### ContactAdmin
+Класс для работы администратора с контактами
+- Вывод на дисплей: **name**(имя человека), **phone**(контактный телефон), **message**(сообщение)
+- Фильтрация по **created_at**(дате создания)
+- Сортировка по **name**(имя человек)
+
+
+## Models
 - **Category**: Модель представляющая категорию
 - **Product**: Модель, представляющая продукт
 ### Model_Category
@@ -129,30 +175,32 @@ OnlineStore_Django/
 - **message**: Сообщение
 - **created_at**: Дата создания
 
+
+## Urls:
+- **Главная страница:** http://127.0.0.1:8000/ - 
+- **Страница для администратора:** http://127.0.0.1:8000/admin/
+- **Cтраница контактов:** http://127.0.0.1:8000/contacts/ 
+- **Страница информации о продукте:** http://127.0.0.1:8000/product_detail/(pk)/
+  - где (pk) - это, целое число PrimaryKey, ID продукта
+- **Страница добавления продукта:** http://127.0.0.1:8000/product_add/
+
+
 ## Views
 ### home:
 - GET: Шаблон HTML главной страницы
-вывод в консоль 5 последних добавленных продуктов
+Со страницами по 4 продуктами
 ### contact:
 - GET: Шаблон HTML страницы контактов
 - POST: Возвращает сообщение при успешном отправке данных из формы
 Заполнение формы и отправка заполняет БД контакты
+### product_detail:
+Принимает PrimaryKey продукта
+- GET: Шаблон HTML информации о продукте
+### product_add:
+- GET: Шаблон HTML страницы добавления продукта
+- POST: Возвращает сообщение при успешном отправке данных из формы
+Заполнение формы и отправка заполняет БД продукты
 
-## Admin
-### CategoryAdmin
-Класс для работы администратора с категориями
-- Вывод на дисплей: **id** и **name**(название категории)
-- Поиск по **name**(имени) и **description**(описанию)
-### ProductAdmin
-Класс для работы администратора с продуктами
-- Вывод на дисплей: **id**, **name**(название продукта), **price**(цена) и **category**(категория)
-- Фильтрация по **category**(категории)
-- Поиск по **name**(имени) и **description**(описанию)
-### ContactAdmin
-Класс для работы администратора с контактами
-- Вывод на дисплей: **name**(имя человека), **phone**(контактный телефон), **message**(сообщение)
-- Фильтрация по **created_at**(дате создания)
-- Сортировка по **name**(имя человек)
 
 ## Кастомные команды
 ### add_product

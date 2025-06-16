@@ -1,0 +1,46 @@
+<!-- product_add.html -->
+{% extends 'catalog/base.html' %}
+
+{% block title %}Добавление продукта{% endblock %}
+
+{% block content %}
+<div class="col-lg-3 col-md-6 col-sm-12">
+    <div class="card mb-4 box-shadow">
+        <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Добавьте продукт</h4>
+        </div>
+        <div class="card-body">
+            <form method="post" action="" class="form-floating" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="name">Продукта: </label>
+                    <input type="text" name="name" id="name" placeholder="Название продукта" required>
+                </div>
+                <div class="mb-3">
+                    <label for="category">Категория: </label>
+                    <select name="category" id="category" required>
+                        <option value="">Выберите категорию</option>  <!-- Опция для выбора -->
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="price">Цена: </label>
+                    <input type="number" name="price" id="price" step="0.01" placeholder="0.01" required>руб
+                </div>
+                <div class="mb-3">
+                    <label for="image">Изображение: </label>
+                    <input type="file" name="image" id="image">
+                </div>
+                <div class="mb-3">
+                    <label for="description">Описание: </label>
+                    <textarea name="description" id="description" placeholder="Описание" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-lg btn-block btn-outline-primary">Добавить</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

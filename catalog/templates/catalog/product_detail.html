@@ -1,0 +1,19 @@
+<!-- product_detail.html -->
+{% extends 'catalog/base.html' %}
+
+{% block title %}Информация о продукте{% endblock %}
+
+{% load my_tags %}
+{% block content %}
+<div class="container">
+    <h1>{{ product.name }}</h1>
+    <img src="{{ product.image | media_filter }}" class="img-thumbnail" style="max-width: 200px; height: auto;" alt="{{ product.name }}">
+    <p>Описание: {{product.description}}</p>
+    <p>Категория: {{category.name}}</p>
+    <p>Цена: {{product.price}} руб</p>
+    <p>Создан: {{product.created_at|date:"d M Y"}}</p>
+    <p>Изменен: {{product.updated_at|date:"d M Y"}}</p>
+    <a href="{% url 'catalog:home' %}" class="btn btn-link" tabindex="-1" role="button" aria-disabled="true">Назад</a>
+</div>
+<script src="/static/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
