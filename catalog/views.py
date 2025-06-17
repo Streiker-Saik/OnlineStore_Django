@@ -1,73 +1,66 @@
-from django.contrib import messages
-from django.core.paginator import Paginator
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import DetailView, ListView
+from django.views.generic.edit import CreateView
 
 from catalog.models import Product, Contact, Category
 
 
-def home(request: HttpRequest) -> HttpResponse:
+class ProductsListViews(ListView):
     """
-    Обрабатывает главную страницу. Со страницами по 4 продуктами
-    :param request: Экземпляр HttpRequest.
-    :return: HTML шаблон главной страницы
+    Класс отвечающий за представление списка продукта.
+    Отображает список продуктов в шаблоне home.html с пагинацией.
+    Порядок отображения продуктов - от нового к старому (по полю updated_at)
     """
-    products = Product.objects.all().order_by('-updated_at')
-    paginator = Paginator(products, 4)
-    page_number = request.GET.get('page') # получаем номер страницы
-    products = paginator.get_page(page_number)
-    context = {"products": products}
-    return render(request,'catalog/home.html', context)
+    model = Product
+    template_name = 'catalog/home.html'
+    paginate_by=4
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        queryset = Product.objects.all().order_by('-updated_at')
+        return queryset
 
 
-def contacts(request: HttpRequest) -> HttpResponse:
+class ContactsCreateView(CreateView):
     """
-    Обрабатывает контактную форму.
-    Отправляет пользователю сообщение при успешной отправке.
-    :param request: Экземпляр HttpRequest.
-    :return: HTML страница при GET запросе или сообщение при успешном POST запросе
+    Класс отвечающий за создание контактов.
+    Позволяет пользователям отправлять свои контактные данные через форму, а также сохраняет их в модели Contact.
+    После успешного создания перенаправляет на страницу контактов.
     """
-    if request.method == "POST":
-        name = request.POST.get("name")
-        phone = request.POST.get("phone")
-        message = request.POST.get("message")
-        Contact.objects.create(name=name, phone=phone, message=message)
-        return HttpResponse(f"Спасибо {name}, сообщение принято.")
-
-    return render(request, 'catalog/contacts.html')
+    model = Contact
+    template_name = 'catalog/contacts.html'
+    fields = ['name', 'phone', 'message']
+    success_url = reverse_lazy('catalog:contacts')
 
 
-def product_detail(request: HttpRequest, pk: int) -> HttpResponse:
+class ProductDetailViews(DetailView):
     """
-    Обрабатывает страницу информации о продукте
-    :param request: Экземпляр HttpRequest.
-    :param pk: ID продукта (PrimaryKey)
-    :return: HTML шаблон информации о продукте
+    Класс отвечающий за получение детальной информации о продукте.
+    Отображает полные данные о выбранном продукте в шаблоне product_detail.html.
+    Добавляет информацию о категории продукта в контекст.
     """
-    product = get_object_or_404(Product, pk=pk)
-    context = {'product': product, 'category': product.category}
-    return render(request, 'catalog/product_detail.html', context)
+    model = Product
+    template_name = 'catalog/product_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = self.object
+        context['category'] = product.category
+        return context
 
 
-def product_add(request: HttpRequest) -> HttpResponse:
+class ProductCreateViews(CreateView):
     """
-    Обрабатывает форму добавления продукта.
-    Отправляет пользователю сообщение при успешной добавлении продукта.
-    :param request: Экземпляр HttpRequest.
-    :return: HTML страница при GET запросе или сообщение при успешном POST запросе
+    Класс отвечающий за создание продукта.
+    Позволяет пользователям добавлять новые продукты через форму в шаблоне product_add.html.
+    После успешного создания перенаправляет на главную страницу.
     """
-    categories = Category.objects.all()
-    context = {"categories": categories}
-    if request.method == "POST":
-        name = request.POST.get("name")
-        description = request.POST.get("description")
-        image = request.FILES.get("image")
-        category_id = request.POST.get("category")
-        price = request.POST.get("price")
-        # if not all([name, price, category_id]):
-        #     messages.error(request, "Пожалуйста, заполните все обязательные поля.")
-        #     return render(request, 'catalog/product_add.html', context)
-        Product.objects.create(name=name, description=description, image=image, category_id=category_id, price=price)
-        return HttpResponse(f"Спасибо! Продукт {name}, добавлен.")
+    model = Product
+    template_name = 'catalog/product_add.html'
+    fields = ['name', 'description', 'image', 'category', 'price']
+    success_url = reverse_lazy('catalog:home')
 
-    return render(request, 'catalog/product_add.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context

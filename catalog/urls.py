@@ -2,7 +2,7 @@ from django.urls import path
 
 from catalog.apps import CatalogConfig
 
-from . import views
+from .views import ProductCreateViews, ProductDetailViews, ProductsListViews, ContactsCreateView
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -10,10 +10,10 @@ from django.conf.urls.static import static
 app_name = CatalogConfig.name
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('contacts/', views.contacts, name='contacts'),
-    path('product_detail/<int:pk>/detail/', views.product_detail, name='product_detail'),
-    path('product_add', views.product_add, name='product_add'),
+    path('', ProductsListViews.as_view(), name='home'),
+    path('contacts/', ContactsCreateView.as_view(), name='contacts'),
+    path('product/<int:pk>/detail/', ProductDetailViews.as_view(), name='product_detail'),
+    path('product/create/', ProductCreateViews.as_view(), name='product_create'),
 ]
 
 if settings.DEBUG:

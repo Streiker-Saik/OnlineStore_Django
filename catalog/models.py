@@ -9,7 +9,6 @@ class Category(models.Model):
         name(str): Название категории
         description(str): Описание категории
     """
-
     name: str = models.CharField(max_length=150, verbose_name="Наименование")
     description: str = models.TextField(verbose_name="Описание", blank=True, null=True)
 
@@ -38,7 +37,6 @@ class Product(models.Model):
         created_at(datetime): Дата и время создания продукта
         updated_at(datetime): Дата и время последнего изменения продукта
     """
-
     name: str = models.CharField(max_length=150, verbose_name="Наименование")
     description: str = models.TextField(verbose_name="Описание", blank=True, null=True)
     image = models.ImageField(upload_to='images/', verbose_name='Изображение', blank=True, null=True)
