@@ -2,7 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView
 
-from catalog.models import Product, Contact, Category
+from catalog.models import Category, Contact, Product
 
 
 class ProductsListViews(ListView):

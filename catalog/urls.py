@@ -1,11 +1,10 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 
 from catalog.apps import CatalogConfig
 
-from .views import ProductCreateViews, ProductDetailViews, ProductsListViews, ContactsCreateView
-
-from django.conf import settings
-from django.conf.urls.static import static
+from .views import ContactsCreateView, ProductCreateViews, ProductDetailViews, ProductsListViews
 
 app_name = CatalogConfig.name
 
