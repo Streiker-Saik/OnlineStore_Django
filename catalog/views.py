@@ -11,13 +11,14 @@ class ProductsListViews(ListView):
     Отображает список продуктов в шаблоне home.html с пагинацией.
     Порядок отображения продуктов - от нового к старому (по полю updated_at)
     """
+
     model = Product
-    template_name = 'catalog/home.html'
-    paginate_by=4
-    context_object_name = 'products'
+    template_name = "catalog/home.html"
+    paginate_by = 4
+    context_object_name = "products"
 
     def get_queryset(self):
-        queryset = Product.objects.all().order_by('-updated_at')
+        queryset = Product.objects.all().order_by("-updated_at")
         return queryset
 
 
@@ -27,10 +28,11 @@ class ContactsCreateView(CreateView):
     Позволяет пользователям отправлять свои контактные данные через форму, а также сохраняет их в модели Contact.
     После успешного создания перенаправляет на страницу контактов.
     """
+
     model = Contact
-    template_name = 'catalog/contacts.html'
-    fields = ['name', 'phone', 'message']
-    success_url = reverse_lazy('catalog:contacts')
+    template_name = "catalog/contacts.html"
+    fields = ["name", "phone", "message"]
+    success_url = reverse_lazy("catalog:contacts")
 
 
 class ProductDetailViews(DetailView):
@@ -39,13 +41,14 @@ class ProductDetailViews(DetailView):
     Отображает полные данные о выбранном продукте в шаблоне product_detail.html.
     Добавляет информацию о категории продукта в контекст.
     """
+
     model = Product
-    template_name = 'catalog/product_detail.html'
+    template_name = "catalog/product_detail.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.object
-        context['category'] = product.category
+        context["category"] = product.category
         return context
 
 
@@ -55,12 +58,13 @@ class ProductCreateViews(CreateView):
     Позволяет пользователям добавлять новые продукты через форму в шаблоне product_add.html.
     После успешного создания перенаправляет на главную страницу.
     """
+
     model = Product
-    template_name = 'catalog/product_add.html'
-    fields = ['name', 'description', 'image', 'category', 'price']
-    success_url = reverse_lazy('catalog:home')
+    template_name = "catalog/product_add.html"
+    fields = ["name", "description", "image", "category", "price"]
+    success_url = reverse_lazy("catalog:home")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
+        context["categories"] = Category.objects.all()
         return context

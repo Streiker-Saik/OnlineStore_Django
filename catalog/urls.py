@@ -9,10 +9,10 @@ from .views import ContactsCreateView, ProductCreateViews, ProductDetailViews, P
 app_name = CatalogConfig.name
 
 urlpatterns = [
-    path('', ProductsListViews.as_view(), name='home'),
-    path('contacts/', ContactsCreateView.as_view(), name='contacts'),
-    path('product/<int:pk>/detail/', ProductDetailViews.as_view(), name='product_detail'),
-    path('product/create/', ProductCreateViews.as_view(), name='product_create'),
+    path("", ProductsListViews.as_view(), name="home"),
+    path("contacts/", ContactsCreateView.as_view(), name="contacts"),
+    path("product/<int:pk>/detail/", ProductDetailViews.as_view(), name="product_detail"),
+    path("product/create/", ProductCreateViews.as_view(), name="product_create"),
 ]
 
 if settings.DEBUG:
