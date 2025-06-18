@@ -38,7 +38,7 @@
    
 ## Описание:
 
-Разработка приложения(веб-сайта) онлайн магазина, с помощью фреймворка Django.
+Разработка приложения(веб-сайта) онлайн магазина и блога, с помощью фреймворка Django.
 
 ## Проверить версию Python:
 
@@ -108,14 +108,13 @@ OnlineStore_Django/
 |   |   ├── ...
 |   |   └── __init__.py
 |   ├── templates/ # шаблоны html
-|   |   └── catalog/
+|   |   └── blog/
 |   |   |   ├── base.html # базовый шаблон
-|   |   |   ├── footer.html # нижняя часть страницы
-|   |   |   ├── header.html # верхняя часть страницы(меню)
-|   |   |   ├── blog_confirm_delete.html
-|   |   |   ├── blog_detail.html
-|   |   |   ├── blog_form.html
-|   |   |   └── blog_list.html
+|   |   |   ├── blogpost_confirm_delete.html # форма удаления
+|   |   |   ├── blogpost_detail.html # форма детальной информации о посте
+|   |   |   ├── blogpost_form.html # форма создания и редоктирования
+|   |   |   ├── blogpost_list.html # форма списка постов
+|   |   |   └── header.html # верхняя часть страницы(меню)
 |   ├── __init__.py
 |   ├── admin.py # регистрация моделе в админке
 |   ├── apps.py
@@ -159,19 +158,24 @@ OnlineStore_Django/
 ├── media/
 |   └── images/
 |   |   └── ...
+|   └── preview/
+|   |   └── ...
 ├── static/
 |   ├── css/
 |   |   └── ...
 |   └── js/
 |   |   └── ...
 ├── .env
+├── .flake8 # настройка для flake8
 ├── .gitignore
+├── blogpost_fixture.json # фикстура blog.BlogPost
 ├── category_fixture.json # фикстура catalog.Category
 ├── manage.py
 ├── poetry.lock
 ├── product_fixture.json # фикстура catalog.Product
-├── pypproject.toml
-└── README.md
+├── pypproject.toml # зависимости для poetry
+├── README.md
+└── requirements.txt # ависимости для pip
 ```
 
 ---
@@ -184,6 +188,7 @@ OnlineStore_Django/
 - Фильтрация по **publication**(опубликовано) и **views_count**(количество просмотров)
 - Поиск по **title**(заголовок) и **content**(содержание)
 - Сортировка по **created_at**(дата и время создания)
+
 
 ## Models blog
 - **BlogPost**: Модель представляющая пост блога
@@ -205,7 +210,7 @@ http://127.0.0.1:8000/blogs/create/
 http://127.0.0.1:8000/blogs/(pk)>/detail/
   - где (pk) - это, целое число PrimaryKey, ID поста
 - **Страница изменение блога:**
-http://127.0.0.1:8000/blogs/(pk)>/update/
+http://127.0.0.1:8000/blogs/(pk)>/edit/
   - где (pk) - это, целое число PrimaryKey, ID поста
 - **Страница удаление блога:**
 http://127.0.0.1:8000/blogs/(pk)>/delete/
