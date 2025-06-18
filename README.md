@@ -6,25 +6,39 @@
 - [Установка](#установка)
 - [Запуск проекта](#запуск-проекта)
 - [Структура проекта](#структура-проекта)
+- [Приложение blog](#приложение-blog)
+  - [Admin blog](#admin-blog)
+    - [BlogPostAdmin](#blogpostadmin)
+  - [Models blog](#models-blog)
+    - [Model_BlogPost](#model_blogpost)
+  - [Urls blog](#urls-blog)
+  - [Views blog](#views-blog)
+    - [BlogPostCreateView](#blogpostcreateviews)
+    - [BlogPostDeleteViews](#blogpostdeleteviews)
+    - [BlogPostDetailViews](#blogpostdetailviews)
+    - [BlogsPostListViews](#blogpostlistviews)
+    - [BlogPostUpdateViews](#blogpostupdateviews)
 - [Приложение catalog](#приложение-catalog)
-  - [Admin](#admin)
+  - [Admin catalog](#admin-catalog)
     - [CategoryAdmin](#categoryadmin)
     - [ProductAdmin](#productadmin)
-  - [Models](#models)
+    - [ContactAdmin](#contactadmin)
+  - [Models catalog](#models-catalog)
     - [Model_Category](#model_category)
     - [Model_Product](#model_product)
     - [Model_Contact](#model_contact)
-  - [Urls](#urls)
-  - [Views](#views)
-    - [contact](#contact)
-    - [home](#home)
-    - [product_detail](#product_detail)
-- [Кастомные команды](#кастомные-команды)
+  - [Urls catalog](#urls-catalog)
+  - [Views catalog](#views-catalog)
+    - [ProductsListViews](#productslistviews)
+    - [ContactsCreateView](#contactscreateview)
+    - [ProductDetailViews](#productdetailviews)
+    - [ProductCreateViews](#productcreateviews)
+  - [Кастомные команды](#кастомные-команды)
 
-
+   
 ## Описание:
 
-Разработка приложения(веб-сайта) онлайн магазина, с помощью фреймворка Django.
+Разработка приложения(веб-сайта) онлайн магазина и блога, с помощью фреймворка Django.
 
 ## Проверить версию Python:
 
@@ -88,6 +102,26 @@ python manage.py runserver
 ## Структура проекта:
 ```
 OnlineStore_Django/
+├── blog/ # приложение блог
+|   ├── migrations/ # пакет миграции моделей
+|   |   ├── 0001_initial.py
+|   |   ├── ...
+|   |   └── __init__.py
+|   ├── templates/ # шаблоны html
+|   |   └── blog/
+|   |   |   ├── base.html # базовый шаблон
+|   |   |   ├── blogpost_confirm_delete.html # форма удаления
+|   |   |   ├── blogpost_detail.html # форма детальной информации о посте
+|   |   |   ├── blogpost_form.html # форма создания и редоктирования
+|   |   |   ├── blogpost_list.html # форма списка постов
+|   |   |   └── header.html # верхняя часть страницы(меню)
+|   ├── __init__.py
+|   ├── admin.py # регистрация моделе в админке
+|   ├── apps.py
+|   ├── models.py # модели БД
+|   ├── tests.py 
+|   └── urls.py # маршрутизация приложения
+|   └── views.py # конструктор контроллеров
 ├── catalog/ # приложение каталог
 |   ├── management/ # кастомные команды
 |   |   └── commands/
@@ -124,21 +158,86 @@ OnlineStore_Django/
 ├── media/
 |   └── images/
 |   |   └── ...
+|   └── preview/
+|   |   └── ...
 ├── static/
 |   ├── css/
+|   |   └── ...
 |   └── js/
+|   |   └── ...
 ├── .env
+├── .flake8 # настройка для flake8
 ├── .gitignore
+├── blogpost_fixture.json # фикстура blog.BlogPost
 ├── category_fixture.json # фикстура catalog.Category
 ├── manage.py
 ├── poetry.lock
 ├── product_fixture.json # фикстура catalog.Product
-├── pypproject.toml
-└── README.md
+├── pypproject.toml # зависимости для poetry
+├── README.md
+└── requirements.txt # ависимости для pip
 ```
 
+---
+# Приложение blog:
+## Admin blog
+### BlogPostAdmin
+Класс для работы администратора с постами блога
+- Вывод на дисплей: **id**, **title**(заголовок), **content**(содержание), **publication**(опубликовано) и 
+**views_count**(количество просмотров)
+- Фильтрация по **publication**(опубликовано) и **views_count**(количество просмотров)
+- Поиск по **title**(заголовок) и **content**(содержание)
+- Сортировка по **created_at**(дата и время создания)
+
+
+## Models blog
+- **BlogPost**: Модель представляющая пост блога
+### Model_BlogPost
+- **title**: Заголовок
+- **content**: Содержание
+- **preview**: Превью(изображение)
+- **created_at**: Дата и время создания продукта
+- **publication**: Признак публикации
+- **views_count**: Количество просмотров
+
+
+## Urls blog:
+- **Страница блогов:** 
+http://127.0.0.1:8000/blogs/
+- **Страница Добавление блога:**
+http://127.0.0.1:8000/blogs/create/
+- **Страница просмотра детальной информации о блоге**
+http://127.0.0.1:8000/blogs/(pk)>/detail/
+  - где (pk) - это, целое число PrimaryKey, ID поста
+- **Страница изменение блога:**
+http://127.0.0.1:8000/blogs/(pk)>/edit/
+  - где (pk) - это, целое число PrimaryKey, ID поста
+- **Страница удаление блога:**
+http://127.0.0.1:8000/blogs/(pk)>/delete/
+  - где (pk) - это, целое число PrimaryKey, ID поста
+
+
+## Views blog
+### BlogPostCreateView:
+Класс отвечающий за создание поста.
+После успешного создания блога переадресует на список блогов.
+### BlogPostDeleteViews:
+Класс отвечающий за удаление поста.
+После успешного удаления пользователя перенаправляет на список блогов.
+### BlogPostDetailViews:
+Класс отвечающий за получение детальной информации о посте.
+При заходе пользователя на страницу, увеличивает количество просмотров.
+### BlogsPostListViews:
+Класс отвечающий за предоставление списка постов.
+Отображает список блогов в шаблоне blogpost_list.html с пагинацией.
+Отображения блогов - только опубликованные (publication=True)
+### BlogPostUpdateViews:
+Класс отвечающий за изменение поста.
+После удачного изменения переходит на детальную информацию о посте.
+
+---
 # Приложение catalog:
-## Admin
+## Admin catalog
 ### CategoryAdmin
 Класс для работы администратора с категориями
 - Вывод на дисплей: **id** и **name**(название категории)
@@ -155,7 +254,7 @@ OnlineStore_Django/
 - Сортировка по **name**(имя человек)
 
 
-## Models
+## Models catalog
 - **Category**: Модель представляющая категорию
 - **Product**: Модель, представляющая продукт
 ### Model_Category
@@ -176,30 +275,32 @@ OnlineStore_Django/
 - **created_at**: Дата создания
 
 
-## Urls:
-- **Главная страница:** http://127.0.0.1:8000/ - 
+## Urls catalog
+- **Главная страница:** http://127.0.0.1:8000/
 - **Страница для администратора:** http://127.0.0.1:8000/admin/
 - **Cтраница контактов:** http://127.0.0.1:8000/contacts/ 
-- **Страница информации о продукте:** http://127.0.0.1:8000/product_detail/(pk)/
+- **Страница информации о продукте:** http://127.0.0.1:8000/product/(pk)/detail/
   - где (pk) - это, целое число PrimaryKey, ID продукта
-- **Страница добавления продукта:** http://127.0.0.1:8000/product_add/
+- **Страница добавления продукта:** http://127.0.0.1:8000/create/
 
 
-## Views
-### home:
-- GET: Шаблон HTML главной страницы
-Со страницами по 4 продуктами
-### contact:
-- GET: Шаблон HTML страницы контактов
-- POST: Возвращает сообщение при успешном отправке данных из формы
-Заполнение формы и отправка заполняет БД контакты
-### product_detail:
-Принимает PrimaryKey продукта
-- GET: Шаблон HTML информации о продукте
-### product_add:
-- GET: Шаблон HTML страницы добавления продукта
-- POST: Возвращает сообщение при успешном отправке данных из формы
-Заполнение формы и отправка заполняет БД продукты
+## Views catalog:
+### ProductsListViews:
+Класс отвечающий за представление списка продукта.
+Отображает список продуктов в шаблоне home.html с пагинацией.
+Порядок отображения продуктов - от нового к старому (по полю updated_at)
+### ContactsCreateView:
+Класс отвечающий за создание контактов.
+Позволяет пользователям отправлять свои контактные данные через форму, а также сохраняет их в модели Contact. 
+После успешного создания перенаправляет на страницу контактов.
+### ProductDetailViews:
+Класс отвечающий за получение детальной информации о продукте.
+Отображает полные данные о выбранном продукте в шаблоне product_detail.html.
+Добавляет информацию о категории продукта в контекст.
+### ProductCreateViews:
+Класс отвечающий за создание продукта.
+Позволяет пользователям добавлять новые продукты через форму в шаблоне product_add.html. 
+После успешного создания перенаправляет на главную страницу.
 
 
 ## Кастомные команды
