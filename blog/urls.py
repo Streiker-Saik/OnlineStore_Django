@@ -2,16 +2,22 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 
-from catalog.apps import CatalogConfig
+from blog.apps import BlogConfig
 
-from .views import BlogCreateView, BlogDeleteViews, BlogDetailViews, BlogsListViews, BlogUpdateViews
+from .views import (
+    BlogPostCreateView,
+    BlogPostDeleteViews,
+    BlogPostDetailViews,
+    BlogsPostListViews,
+    BlogPostUpdateViews,
+)
 
-app_name = CatalogConfig.name
+app_name = BlogConfig.name
 
 urlpatterns = [
-    path('blog/', BlogsListViews.as_view(), name='blog_list'),
-    path('blog/create/', BlogCreateView.as_view(), name='blog_create'),
-    path('product/<int:pk>/detail/', BlogDetailViews.as_view(), name='blog_detail'),
-    path('product/<int:pk>/delete/', BlogDeleteViews.as_view(), name='blog_delete'),
-    path('product/<int:pk>/update/', BlogUpdateViews.as_view(), name='blog_update'),
+    path("", BlogsPostListViews.as_view(), name="blog_list"),
+    path("create/", BlogPostCreateView.as_view(), name="blog_create"),
+    path("<int:pk>/detail/", BlogPostDetailViews.as_view(), name="blog_detail"),
+    path("<int:pk>/delete/", BlogPostDeleteViews.as_view(), name="blog_delete"),
+    path("<int:pk>/edit/", BlogPostUpdateViews.as_view(), name="blog_edit"),
 ]
