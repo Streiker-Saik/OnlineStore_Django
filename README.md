@@ -33,6 +33,8 @@
     - [ContactsCreateView](#contactscreateview)
     - [ProductDetailViews](#productdetailviews)
     - [ProductCreateViews](#productcreateviews)
+    - [ProductUpdateViews](#productupdateviews)
+    - [ProductDeleteView](#productdeleteview)
   - [Кастомные команды](#кастомные-команды)
 
    
@@ -138,13 +140,15 @@ OnlineStore_Django/
 |   |   |   ├── footer.html # нижняя часть страницы
 |   |   |   ├── header.html # верхняя часть страницы(меню)
 |   |   |   ├── home.html
-|   |   |   ├── product_add.html
-|   |   |   └── product_detail.html
+|   |   |   ├── product_confirm_delete.html # шаблон для удаления прлодукта
+|   |   |   ├── product_detail.html # шаблон для детальной информации о продукте
+|   |   |   └── product_form.html # шаблон для создания/изменения продукта
 |   ├── templatetags/ 
 |   |   └── my_tags.py
 |   ├── __init__.py
 |   ├── admin.py # регистрация моделе в админке
 |   ├── apps.py
+|   ├── forms.py # формы
 |   ├── models.py # модели БД
 |   ├── tests.py 
 |   └── urls.py # маршрутизация приложения
@@ -282,7 +286,10 @@ http://127.0.0.1:8000/blogs/(pk)>/delete/
 - **Страница информации о продукте:** http://127.0.0.1:8000/product/(pk)/detail/
   - где (pk) - это, целое число PrimaryKey, ID продукта
 - **Страница добавления продукта:** http://127.0.0.1:8000/create/
-
+- **Страница изменения продукта:** http://127.0.0.1:8000/product/(pk)/edit/
+  - где (pk) - это, целое число PrimaryKey, ID продукта
+- **Страница удаления продукта:** http://127.0.0.1:8000/product/(pk)/delete/
+  - где (pk) - это, целое число PrimaryKey, ID продукта
 
 ## Views catalog:
 ### ProductsListViews:
@@ -299,8 +306,15 @@ http://127.0.0.1:8000/blogs/(pk)>/delete/
 Добавляет информацию о категории продукта в контекст.
 ### ProductCreateViews:
 Класс отвечающий за создание продукта.
-Позволяет пользователям добавлять новые продукты через форму в шаблоне product_add.html. 
+Позволяет пользователям добавлять новые продукты через форму. 
 После успешного создания перенаправляет на главную страницу.
+## ProductUpdateViews:
+Класс отвечающий за изменения продукта.
+Позволяет пользователям редактировать продукты через форму.
+После успешного создания перенаправляет на детальную информацию о продукте.
+## ProductDeleteView:
+Класс отвечающий за удаление продукта
+После успешного удаления перенаправляет на список блогов.
 
 
 ## Кастомные команды
