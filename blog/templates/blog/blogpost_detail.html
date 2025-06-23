@@ -1,0 +1,20 @@
+<!-- blogpost_detail.html -->
+{% extends 'blog/base.html' %}
+
+{% block title %}Подробная информация{% endblock %}
+
+{% load my_tags %}
+{% block content %}
+<div class="container">
+    <h1>{{ blog.title }}</h1>
+    <img src="{{ blog.preview | media_filter }}" class="img-thumbnail" style="max-width: 200px; height: auto;" alt="{{ blog.title }}">
+    <p>{{blog.content}}</p>
+    <p>Создан: {{blog.created_at|date:"d M Y"}}</p>
+    <p>Опубликован: {{blog.publication}}</p>
+    <p>Количество просмотров: {{blog.views_count}}</p>
+    <a href="{% url 'blog:blog_edit' blog.pk %}" class="btn btn-primary">Изменить</a>
+    <a href="{% url 'blog:blog_list' %}" class="btn btn-secondary">Назад</a>
+    <a href="{% url 'blog:blog_delete' blog.pk %}" class="btn btn-danger">Удалить</a>
+</div>
+<script src="/static/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
