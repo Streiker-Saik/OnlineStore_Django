@@ -23,6 +23,8 @@
     - [CategoryAdmin](#categoryadmin)
     - [ProductAdmin](#productadmin)
     - [ContactAdmin](#contactadmin)
+  - [Forms catalog](#forms-catalog)
+    -[ProductForm](#productform)
   - [Models catalog](#models-catalog)
     - [Model_Category](#model_category)
     - [Model_Product](#model_product)
@@ -256,6 +258,12 @@ http://127.0.0.1:8000/blogs/(pk)>/delete/
 - Вывод на дисплей: **name**(имя человека), **phone**(контактный телефон), **message**(сообщение)
 - Фильтрация по **created_at**(дате создания)
 - Сортировка по **name**(имя человек)
+
+
+## Forms catalog
+### ProductForm
+Форма для создания и редактирования продукта.
+Включает в себя валидацию, которая запрещает использование определенных слов в name и description
 
 
 ## Models catalog
