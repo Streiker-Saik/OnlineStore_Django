@@ -9,7 +9,9 @@ FORBIDDEN_WORDS = ["казино", "криптовалюта", "крипта", "
 class ProductForm(forms.ModelForm):
     """
     Форма для создания и редактирования продукта.
-    Включает в себя валидацию, которая запрещает использование определенных слов в name и description
+    Включает в себя валидации:
+        запрещает использование определенных слов в name и description
+        запрещает цене быть отрицательной
     """
 
     class Meta:
@@ -38,3 +40,14 @@ class ProductForm(forms.ModelForm):
             raise ValidationError(errors)
 
         return clean_data
+
+    def clean_price(self) -> float:
+        """
+        Валидация цены
+        :return: Валидация прошла успешно, возвращает цену.
+        :raise ValidationError: При отрицательной цене.
+        """
+        price = self.cleaned_data.get('price')
+        if price < 0:
+            raise ValidationError('Цена не может быть меньше 0')
+        return price
