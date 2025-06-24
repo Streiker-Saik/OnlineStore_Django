@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.db.models.fields.files import ImageFieldFile
 
 from .models import Product
 
@@ -12,11 +13,30 @@ class ProductForm(forms.ModelForm):
     Включает в себя валидации:
         запрещает использование определенных слов в name и description
         запрещает цене быть отрицательной
+        запрещает загружать файлы не форматов JPG/PNG и с размером больше 5 МБ
     """
 
     class Meta:
         model = Product
         fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        """Инициализация стилизации форм"""
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Введите название продукта'
+        })
+        self.fields['description'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Введите описание продукта'
+        })
+        self.fields['image'].widget.attrs.update({'class': 'form-control'})
+        self.fields['category'].widget.attrs.update({'class': 'form-control'})
+        self.fields['price'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Введите цену продукта'
+        })
 
     def clean(self) -> dict:
         """
@@ -51,3 +71,17 @@ class ProductForm(forms.ModelForm):
         if price < 0:
             raise ValidationError('Цена не может быть меньше 0')
         return price
+
+    def clean_image(self) -> 'ImageFieldFile':
+        """
+        Валидация изображения
+        Проверка расширения и размера
+        :return: Загруженное изображение
+        :raise ValidationError: Файл не форматов JPG/PNG или превышает 5 МБ
+        """
+        image = self.cleaned_data.get('image')
+        if not (image.name.endswith('png') or image.name.endswith('jpg') or image.name.endswith('jpeg')):
+            raise ValidationError('Файл должен быть форма JPG/PNG')
+        if image.size > 5 * 1024 * 1024:
+            raise ValidationError('Файл не должен превышать 5 МБ')
+        return image
