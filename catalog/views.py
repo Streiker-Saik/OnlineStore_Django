@@ -1,7 +1,8 @@
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
+from catalog.forms import ProductForm
 from catalog.models import Category, Contact, Product
 
 
@@ -55,16 +56,40 @@ class ProductDetailViews(DetailView):
 class ProductCreateViews(CreateView):
     """
     Класс отвечающий за создание продукта.
-    Позволяет пользователям добавлять новые продукты через форму в шаблоне product_add.html.
+    Позволяет пользователям добавлять новые продукты через форму.
     После успешного создания перенаправляет на главную страницу.
     """
 
     model = Product
-    template_name = "catalog/product_add.html"
-    fields = ["name", "description", "image", "category", "price"]
+    form_class = ProductForm
     success_url = reverse_lazy("catalog:home")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
         return context
+
+
+class ProductUpdateViews(UpdateView):
+    """
+    Класс отвечающий за изменения продукта.
+    Позволяет пользователям редактировать продукты через форму.
+    После успешного создания перенаправляет на детальную информацию о продукте.
+    """
+
+    model = Product
+    form_class = ProductForm
+
+    def get_success_url(self):
+        return reverse_lazy("catalog:product_detail", kwargs={"pk": self.object.pk})
+
+
+class ProductDeleteViews(DeleteView):
+    """
+    Класс отвечающий за удаление продукта
+    После успешного удаления перенаправляет на список блогов.
+    """
+
+    model = Product
+    context_object_name = "product"
+    success_url = reverse_lazy("catalog:home")
