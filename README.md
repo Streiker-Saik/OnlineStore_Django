@@ -24,7 +24,7 @@
     - [ProductAdmin](#productadmin)
     - [ContactAdmin](#contactadmin)
   - [Forms catalog](#forms-catalog)
-    -[ProductForm](#productform)
+    - [ProductForm](#productform)
   - [Models catalog](#models-catalog)
     - [Model_Category](#model_category)
     - [Model_Product](#model_product)
