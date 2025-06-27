@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
@@ -36,7 +37,7 @@ class ContactsCreateView(CreateView):
     success_url = reverse_lazy("catalog:contacts")
 
 
-class ProductDetailViews(DetailView):
+class ProductDetailViews(LoginRequiredMixin, DetailView):
     """
     Класс отвечающий за получение детальной информации о продукте.
     Отображает полные данные о выбранном продукте в шаблоне product_detail.html.
@@ -53,7 +54,7 @@ class ProductDetailViews(DetailView):
         return context
 
 
-class ProductCreateViews(CreateView):
+class ProductCreateViews(LoginRequiredMixin, CreateView):
     """
     Класс отвечающий за создание продукта.
     Позволяет пользователям добавлять новые продукты через форму.
@@ -70,7 +71,7 @@ class ProductCreateViews(CreateView):
         return context
 
 
-class ProductUpdateViews(UpdateView):
+class ProductUpdateViews(LoginRequiredMixin, UpdateView):
     """
     Класс отвечающий за изменения продукта.
     Позволяет пользователям редактировать продукты через форму.
@@ -84,7 +85,7 @@ class ProductUpdateViews(UpdateView):
         return reverse_lazy("catalog:product_detail", kwargs={"pk": self.object.pk})
 
 
-class ProductDeleteViews(DeleteView):
+class ProductDeleteViews(LoginRequiredMixin, DeleteView):
     """
     Класс отвечающий за удаление продукта
     После успешного удаления перенаправляет на список блогов.
