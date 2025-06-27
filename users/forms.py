@@ -87,3 +87,38 @@ class CustomAuthenticationForm(AuthenticationForm):
 
         except User.DoesNotExist:
             raise forms.ValidationError("Пользователь с такой электронной почтой не найден")
+
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta(UserCreationForm.Meta):
+        model = CustomUser
+        fields = ("email", "username", "first_name", "last_name", "avatar", "phone_number", "country")
+
+    def __init__(self, *args, **kwargs) -> None:
+        """Инициализирует поля формы с пользовательскими настройками"""
+        super().__init__(*args, **kwargs)
+        self.fields["email"].label = "Электронная почта"
+        self.fields["email"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Введите адрес электронной почты"}
+        )
+        self.fields["username"].label = "Логин"
+        self.fields["username"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Введите логин"}
+        )
+        self.fields["first_name"].label = "Имя"
+        self.fields["first_name"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Введите имя"}
+        )
+        self.fields["last_name"].label = "Фамилия"
+        self.fields["last_name"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Введите фамилию"}
+        )
+
+        self.fields["phone_number"].label = "Номер телефона"
+        self.fields["phone_number"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Введите номер телефона"}
+        )
+        self.fields["country"].label = "Страна"
+        self.fields["country"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Введите страну проживания"}
+        )

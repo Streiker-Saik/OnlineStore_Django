@@ -4,9 +4,9 @@ from django.contrib.auth.views import LoginView
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 
-from users.forms import CustomAuthenticationForm, CustomUserCreationForm
+from users.forms import CustomAuthenticationForm, CustomUserCreationForm, UserUpdateForm
 
 
 class RegisterView(CreateView):
@@ -49,3 +49,16 @@ class CustomLoginView(LoginView):
     template_name = "users/login.html"
     form_class = CustomAuthenticationForm
     success_url = reverse_lazy("catalog:home")
+
+
+class UserUpdateView(UpdateView):
+    template_name = "users/register.html"
+    form_class = UserUpdateForm
+    success_url = reverse_lazy("catalog:home")
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
