@@ -58,7 +58,3 @@ class UserUpdateView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
-
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
