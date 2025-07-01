@@ -9,7 +9,8 @@
         "category": 1,
         "price": "139999.00",
         "created_at": "2025-06-10T08:43:40.995Z",
-        "updated_at": "2025-06-10T08:43:40.995Z"
+        "updated_at": "2025-06-10T08:43:40.995Z",
+        "publication": true
     }
 },
 {
@@ -22,7 +23,8 @@
         "category": 1,
         "price": "40999.00",
         "created_at": "2025-06-10T08:52:45.972Z",
-        "updated_at": "2025-06-10T08:52:45.972Z"
+        "updated_at": "2025-06-10T08:52:45.972Z",
+        "publication": true
     }
 },
 {
@@ -35,7 +37,8 @@
         "category": 2,
         "price": "49999.00",
         "created_at": "2025-06-10T10:08:10.504Z",
-        "updated_at": "2025-06-10T10:08:10.504Z"
+        "updated_at": "2025-06-10T10:08:10.504Z",
+        "publication": true
     }
 },
 {
@@ -48,7 +51,8 @@
         "category": 3,
         "price": "3699.00",
         "created_at": "2025-06-10T10:14:54.931Z",
-        "updated_at": "2025-06-10T10:14:54.931Z"
+        "updated_at": "2025-06-10T10:14:54.931Z",
+        "publication": true
     }
 },
 {
@@ -61,7 +65,8 @@
         "category": 1,
         "price": "63999.00",
         "created_at": "2025-06-10T11:30:01.492Z",
-        "updated_at": "2025-06-10T11:30:01.492Z"
+        "updated_at": "2025-06-10T11:30:01.492Z",
+        "publication": true
     }
 },
 {
@@ -74,7 +79,8 @@
         "category": 1,
         "price": "49999.00",
         "created_at": "2025-06-17T06:35:46.291Z",
-        "updated_at": "2025-06-17T06:35:46.291Z"
+        "updated_at": "2025-06-23T13:00:01.219Z",
+        "publication": true
     }
 }
 ]

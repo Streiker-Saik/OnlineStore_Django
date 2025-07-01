@@ -1,10 +1,26 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, View
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-
+from django.shortcuts import get_object_or_404, redirect
 from catalog.forms import ProductForm
 from catalog.models import Category, Contact, Product
+
+
+class PublishProductViews(LoginRequiredMixin, View):
+    """
+    Представление отвечающее за снятие публикации продукта.
+    Снять с публикации возможно с правом can_unpublish_product
+    """
+
+    def post(self, request, pk):
+        product = get_object_or_404(Product, pk=pk)
+        if not request.user.has_perm("catalog.can_unpublish_product"):
+            return HttpResponse("У вас нет прав отменить публикацию")
+        product.publication = False
+        product.save()
+        return redirect('catalog:home')
 
 
 class ProductsListViews(ListView):
@@ -20,7 +36,7 @@ class ProductsListViews(ListView):
     context_object_name = "products"
 
     def get_queryset(self):
-        queryset = Product.objects.all().order_by("-updated_at")
+        queryset = Product.objects.filter(publication="True").order_by("-updated_at")
         return queryset
 
 
@@ -54,16 +70,18 @@ class ProductDetailViews(LoginRequiredMixin, DetailView):
         return context
 
 
-class ProductCreateViews(LoginRequiredMixin, CreateView):
+class ProductCreateViews(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """
     Класс отвечающий за создание продукта.
     Позволяет пользователям добавлять новые продукты через форму.
     После успешного создания перенаправляет на главную страницу.
+    Создание возможно только с правом add_product
     """
 
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy("catalog:home")
+    permission_required = 'catalog.add_product'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -85,12 +103,14 @@ class ProductUpdateViews(LoginRequiredMixin, UpdateView):
         return reverse_lazy("catalog:product_detail", kwargs={"pk": self.object.pk})
 
 
-class ProductDeleteViews(LoginRequiredMixin, DeleteView):
+class ProductDeleteViews(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """
     Класс отвечающий за удаление продукта
-    После успешного удаления перенаправляет на список блогов.
+    После успешного удаления перенаправляет на список блогов
+    Удаление возможно только с правом delete_product
     """
 
     model = Product
     context_object_name = "product"
     success_url = reverse_lazy("catalog:home")
+    permission_required = 'catalog.delete_product'

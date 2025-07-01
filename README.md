@@ -8,6 +8,8 @@
 - [Запуск проекта](#запуск-проекта)
 - [Структура проекта](#структура-проекта)
 - [Приложение users](#приложение-users)
+  - [Admin users](#admin-users)
+    - [CustomUserAdmin](#customuseradmin)
   - [Forms users](#forms-users)
     - [CustomUserCreationForm](#customusercreationform)
     - [CustomAuthenticationForm](#customauthenticationform)
@@ -24,10 +26,10 @@
     - [Model_BlogPost](#model_blogpost)
   - [Urls blog](#urls-blog)
   - [Views blog](#views-blog)
-    - [BlogPostCreateView](#blogpostcreateviews)
+    - [BlogPostCreateView](#blogpostcreateview)
     - [BlogPostDeleteViews](#blogpostdeleteviews)
     - [BlogPostDetailViews](#blogpostdetailviews)
-    - [BlogsPostListViews](#blogpostlistviews)
+    - [BlogsPostListViews](#blogspostlistviews)
     - [BlogPostUpdateViews](#blogpostupdateviews)
 - [Приложение catalog](#приложение-catalog)
   - [Admin catalog](#admin-catalog)
@@ -42,6 +44,7 @@
     - [Model_Contact](#model_contact)
   - [Urls catalog](#urls-catalog)
   - [Views catalog](#views-catalog)
+    - [PublishProductViews](#publishproductviews)
     - [ProductsListViews](#productslistviews)
     - [ContactsCreateView](#contactscreateview)
     - [ProductDetailViews](#productdetailviews)
@@ -226,6 +229,13 @@ OnlineStore_Django/
 ---
 
 # Приложение users:
+## Admin users
+### CustomUserAdmin
+Класс для работы администратора с кастомными пользователями
+- Поля не включены в форму: **password**(пароль)
+
+[<- на начало](#содержание)
+
 ## Forms users
 ### CustomUserCreationForm
 Кастомная форма регистрации пользователя
@@ -382,6 +392,7 @@ http://127.0.0.1:8000/blogs/(pk)>/delete/
 - **price**: Цена продукта
 - **created_at**: Дата и время создания продукта
 - **updated_at**: Дата и время последнего изменения продукта
+- **publication** Публикация продукта
 ### Model_Contact
 - **name**: Имя
 - **phone**: Номер телефона
@@ -405,19 +416,26 @@ http://127.0.0.1:8000/blogs/(pk)>/delete/
 - **Страница удаления продукта:** http://127.0.0.1:8000/product/(pk)/delete/
   - где (pk) - это, целое число PrimaryKey, ID продукта
   - **Доступ:** Только зарегистрированным пользователям
+- **Страница отмены публикации:** http://127.0.0.1:8000/product/(pk)/unpublish/
+  - где (pk) - это, целое число PrimaryKey, ID продукта
+  - **Доступ:** Только зарегистрированным пользователям
 
 [<- на начало](#содержание)
 
 ## Views catalog:
+### PublishProductViews:
+Представление отвечающее за снятие публикации продукта.
+Снять с публикации возможно с правом can_unpublish_product
 ### ProductsListViews:
 Класс отвечающий за представление списка продукта.
 Отображает список продуктов в шаблоне home.html с пагинацией.
+Отображаются только опубликованные продукты (по полю publication)
 Порядок отображения продуктов - от нового к старому (по полю updated_at)
 ### ContactsCreateView:
 Класс отвечающий за создание контактов.
 Позволяет пользователям отправлять свои контактные данные через форму, а также сохраняет их в модели Contact. 
 После успешного создания перенаправляет на страницу контактов.
-### ProductDetailViews: 
+### ProductDetailViews:
 **Доступ только зарегистрированным пользователям**  
 Класс отвечающий за получение детальной информации о продукте.
 Отображает полные данные о выбранном продукте в шаблоне product_detail.html.
@@ -427,6 +445,7 @@ http://127.0.0.1:8000/blogs/(pk)>/delete/
 Класс отвечающий за создание продукта.
 Позволяет пользователям добавлять новые продукты через форму. 
 После успешного создания перенаправляет на главную страницу.
+Создание возможно только с правом add_product.
 ## ProductUpdateViews:
 **Доступ только зарегистрированным пользователям**  
 Класс отвечающий за изменения продукта.
@@ -434,8 +453,9 @@ http://127.0.0.1:8000/blogs/(pk)>/delete/
 После успешного создания перенаправляет на детальную информацию о продукте.
 ## ProductDeleteView:
 **Доступ только зарегистрированным пользователям**  
-Класс отвечающий за удаление продукта
+Класс отвечающий за удаление продукта.
 После успешного удаления перенаправляет на список блогов.
+Удаление возможно только с правом delete_product.
 
 [<- на начало](#содержание)
 
@@ -446,6 +466,18 @@ http://127.0.0.1:8000/blogs/(pk)>/delete/
 - 'product_fixture.json'
 ```bash
 python manage.py add_products
+```
+### add_blogs
+Команда для добавления постов блога из fixture
+- 'blogpost_fixture.json'
+```bash
+python manage.py add_blogs
+```
+### add_groups
+Команда для добавления постов блога из fixture
+- 'group_fixture.json'
+```bash
+python manage.py add_groups
 ```
 
 [<- на начало](#содержание)

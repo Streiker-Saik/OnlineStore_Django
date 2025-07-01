@@ -37,6 +37,7 @@ class Product(models.Model):
         price(float): Цена продукта
         created_at(datetime): Дата и время создания продукта
         updated_at(datetime): Дата и время последнего изменения продукта
+        publication(bool): Публикация продукта
     """
 
     name: str = models.CharField(max_length=150, verbose_name="Наименование")
@@ -46,6 +47,7 @@ class Product(models.Model):
     price: float = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата изменения")
+    publication = models.BooleanField(verbose_name="Публиковано", default=False)
 
     def __str__(self) -> str:
         """
@@ -58,6 +60,9 @@ class Product(models.Model):
         verbose_name = "продукт"
         verbose_name_plural = "продукты"
         ordering = ["name"]
+        permissions = [
+            ("can_unpublish_product", "Can unpublish product"),
+        ]
 
 
 class Contact(models.Model):
