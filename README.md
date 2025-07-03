@@ -393,6 +393,7 @@ http://127.0.0.1:8000/blogs/(pk)>/delete/
 - **created_at**: Дата и время создания продукта
 - **updated_at**: Дата и время последнего изменения продукта
 - **publication** Публикация продукта
+- **owner** Связь с пользователем, который создал продукт
 ### Model_Contact
 - **name**: Имя
 - **phone**: Номер телефона
@@ -475,7 +476,7 @@ python manage.py add_blogs
 ```
 ### add_groups
 Команда для добавления постов блога из fixture
-- 'group_fixture.json'
+- 'auth_fixture.json'
 ```bash
 python manage.py add_groups
 ```
