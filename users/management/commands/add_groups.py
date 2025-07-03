@@ -17,7 +17,7 @@ class Command(BaseCommand):
         call_command(
             "loaddata",
             (
-                "group_fixture.json.json",
+                "auth_fixture.json",
             ),
         )
         self.stdout.write(self.style.SUCCESS("Успешно загружены данные из фикстуры"))
