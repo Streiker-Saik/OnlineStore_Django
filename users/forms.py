@@ -102,17 +102,11 @@ class UserUpdateForm(forms.ModelForm):
             {"class": "form-control", "placeholder": "Введите адрес электронной почты"}
         )
         self.fields["username"].label = "Логин"
-        self.fields["username"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "Введите логин"}
-        )
+        self.fields["username"].widget.attrs.update({"class": "form-control", "placeholder": "Введите логин"})
         self.fields["first_name"].label = "Имя"
-        self.fields["first_name"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "Введите имя"}
-        )
+        self.fields["first_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите имя"})
         self.fields["last_name"].label = "Фамилия"
-        self.fields["last_name"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "Введите фамилию"}
-        )
+        self.fields["last_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите фамилию"})
 
         self.fields["phone_number"].label = "Номер телефона"
         self.fields["phone_number"].widget.attrs.update(

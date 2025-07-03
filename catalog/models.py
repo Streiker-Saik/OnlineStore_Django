@@ -51,7 +51,9 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата изменения")
     publication = models.BooleanField(verbose_name="Публиковано", default=False)
-    owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name="owned_products", verbose_name="Владелец")
+    owner = models.ForeignKey(
+        CustomUser, on_delete=models.SET_NULL, null=True, related_name="owned_products", verbose_name="Владелец"
+    )
 
     def __str__(self) -> str:
         """

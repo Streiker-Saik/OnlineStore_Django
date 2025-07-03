@@ -16,8 +16,6 @@ class Command(BaseCommand):
 
         call_command(
             "loaddata",
-            (
-                "blogpost_fixture.json",
-            ),
+            ("blogpost_fixture.json",),
         )
         self.stdout.write(self.style.SUCCESS("Успешно загружены данные из фикстуры"))

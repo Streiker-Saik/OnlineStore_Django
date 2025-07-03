@@ -14,18 +14,22 @@
     <p>Цена: {{product.price}} руб</p>
     <p>Создан: {{product.created_at|date:"d M Y"}}</p>
     <p>Изменен: {{product.updated_at|date:"d M Y"}}</p>
-    {% if perms.catalog.view_product %}
+    <a href="{% url 'catalog:home' %}" class="btn btn-secondary">Назад</a>
+    {% if perms.catalog.view_product or user == product.owner %}
         <a href="{% url 'catalog:product_edit' product.pk %}" class="btn btn-primary">Изменить</a>
     {% endif %}
-    <a href="{% url 'catalog:home' %}" class="btn btn-secondary">Назад</a>
-    {% if perms.catalog.delete_product%}
+    {% if perms.catalog.delete_product or user == product.owner %}
         <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">Удалить</a>
     {% endif %}
     {% if perms.catalog.can_unpublish_product %}
+        {% if product.publication %}
         <form action="{% url 'catalog:product_unpublish' product.pk %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-warning">Отменить публикацию</button>
+                <button type="submit" class="btn btn-warning">Отменить публикацию</button>
         </form>
+        {% else %}
+        <p>Снято с публикации</p>
+        {% endif %}
     {% endif %}
 </div>
 <script src="/static/js/bootstrap.bundle.min.js"></script>

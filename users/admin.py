@@ -7,4 +7,6 @@ from .models import CustomUser
 class CustomUserAdmin(admin.ModelAdmin):
     """Класс для работы администратора с кастомными пользователями"""
 
-    exclude = ['password',]
+    exclude = [
+        "password",
+    ]
