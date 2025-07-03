@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
@@ -5,10 +6,11 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from blog.models import BlogPost
 
 
-class BlogPostCreateView(CreateView):
+class BlogPostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """
     Класс отвечающий за создание поста.
     После успешного создания блога переадресует на список блогов.
+    Только пользователь с наличием прав может создать пост.
     """
 
     model = BlogPost
@@ -19,23 +21,27 @@ class BlogPostCreateView(CreateView):
         "publication",
     ]
     success_url = reverse_lazy("blog:blog_list")
+    permission_required = "blog.add_blogpost"
 
 
-class BlogPostDeleteViews(DeleteView):
+class BlogPostDeleteViews(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """
     Класс отвечающий за удаление поста.
     После успешного удаления пользователя перенаправляет на список блогов.
+    Только пользователь с наличием прав может удалить пост.
     """
 
     model = BlogPost
     context_object_name = "blog"
     success_url = reverse_lazy("blog:blog_list")
+    permission_required = "blog.delete_blogpost"
 
 
 class BlogPostDetailViews(DetailView):
     """
     Класс отвечающий за получение детальной информации о посте.
     При заходе пользователя на страницу, увеличивает количество просмотров.
+    Супер юзер и пользователь входящий в группу не увеличивают счетчик просмотров.
     """
 
     model = BlogPost
@@ -43,8 +49,11 @@ class BlogPostDetailViews(DetailView):
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
-        self.object.views_count += 1
-        self.object.save()
+        user = self.request.user
+        user_group = user.groups.all()
+        if not user_group and not user.is_superuser:
+            self.object.views_count += 1
+            self.object.save()
         return self.object
 
 
@@ -64,10 +73,11 @@ class BlogsPostListViews(ListView):
         return queryset
 
 
-class BlogPostUpdateViews(UpdateView):
+class BlogPostUpdateViews(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """
     Класс отвечающий за изменение поста.
     После удачного изменения переходит на детальную информацию о посте.
+    Только пользователь с наличием прав может изменить пост.
     """
 
     model = BlogPost
@@ -77,6 +87,7 @@ class BlogPostUpdateViews(UpdateView):
         "preview",
         "publication",
     ]
+    permission_required = "blog.change_blogpost"
 
     def get_success_url(self):
         return reverse_lazy("blog:blog_detail", kwargs={"pk": self.object.pk})
