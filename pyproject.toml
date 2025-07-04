@@ -11,7 +11,8 @@ dependencies = [
     "python-dotenv (>=1.1.0,<2.0.0)",
     "psycopg2 (>=2.9.10,<3.0.0)",
     "pillow (>=11.2.1,<12.0.0)",
-    "django (>=5.2.3,<6.0.0)"
+    "django (>=5.2.3,<6.0.0)",
+    "redis (>=6.2.0,<7.0.0)"
 ]
 
 
@@ -20,7 +21,6 @@ requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.group.dev.dependencies]
-django = "^5.2.1"
 ipython = "^9.3.0"
 
 

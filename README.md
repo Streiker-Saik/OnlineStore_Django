@@ -111,9 +111,8 @@ poetry install
 ```
 или
 ```bash
-poetry add python-dotenv psycopg2 pillow
+poetry add django python-dotenv psycopg2 pillow redis
 poetry add --group lint flake8 black isort mypy ipython
-poetry add --group dev django
 ```
 - Зайдите в файл .env.example и следуйте инструкция
 

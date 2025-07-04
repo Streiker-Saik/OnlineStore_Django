@@ -4,16 +4,16 @@
     "pk": 4,
     "fields": {
         "password": "pbkdf2_sha256$1000000$9auTTTNGQhRd1EIHv54Vcw$LVVmDbjN0RqJdfwHO5K1ttnbEUs0WkQ/sYWHgnFZFWA=",
-        "last_login": "2025-07-03T13:00:31.927Z",
+        "last_login": "2025-07-03T20:08:17.840Z",
         "is_superuser": true,
         "username": "admin",
         "first_name": "",
         "last_name": "",
         "is_staff": true,
         "is_active": true,
-        "date_joined": "2025-07-01T13:36:46.275Z",
+        "date_joined": "2025-07-01T13:36:46Z",
         "email": "admin@admin.com",
-        "avatar": "",
+        "avatar": "avatars/admin.png",
         "phone_number": null,
         "country": null,
         "groups": [],
@@ -25,7 +25,7 @@
     "pk": 6,
     "fields": {
         "password": "pbkdf2_sha256$1000000$bhwJpH3wpIVjxhPVkFsQpJ$rW5e3+109m2GYDER3p+8Qjy66CND2FlzuebSu5psT18=",
-        "last_login": "2025-07-03T13:01:31.587Z",
+        "last_login": "2025-07-03T20:08:35.643Z",
         "is_superuser": false,
         "username": "Moderator",
         "first_name": "",
@@ -34,7 +34,7 @@
         "is_active": true,
         "date_joined": "2025-07-03T11:29:59Z",
         "email": "moder@moder.com",
-        "avatar": "",
+        "avatar": "avatars/moderator.jpg",
         "phone_number": null,
         "country": null,
         "groups": [
@@ -48,7 +48,7 @@
     "pk": 7,
     "fields": {
         "password": "pbkdf2_sha256$1000000$qoPAHnLQN8Hip1qPAMPdB0$/yk1dIZA54TclI8gAJDU9Y8vkb+LLbiAVsAezqGTarE=",
-        "last_login": "2025-07-03T13:01:49.642Z",
+        "last_login": "2025-07-03T20:06:45.946Z",
         "is_superuser": false,
         "username": "User",
         "first_name": "",
@@ -61,6 +61,29 @@
         "phone_number": null,
         "country": null,
         "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.customuser",
+    "pk": 8,
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$Bq4qZ7SkUuzef5rjUGJZlh$JwiyS2U3qjir8Bfsg4/hwlcDEXizVVsztAsAb5f1IH8=",
+        "last_login": "2025-07-03T19:16:57.192Z",
+        "is_superuser": false,
+        "username": "Conten_Manager",
+        "first_name": "",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-07-03T19:13:24Z",
+        "email": "manager@manager.com",
+        "avatar": "",
+        "phone_number": null,
+        "country": null,
+        "groups": [
+            2
+        ],
         "user_permissions": []
     }
 }
