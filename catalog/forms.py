@@ -18,7 +18,7 @@ class ProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = "__all__"
+        exclude = ['publication', 'owner',]
 
     def __init__(self, *args, **kwargs):
         """Инициализация стилизации форм"""

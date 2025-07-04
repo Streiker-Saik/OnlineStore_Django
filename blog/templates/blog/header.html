@@ -4,7 +4,20 @@
     <h5 class="my-0 mr-md-auto font-weight-normal">Blog</h5>
     <nav class="ms-5">
         <a class="p-2 btn btn-outline-primary" href="{% url 'blog:blog_list' %}">Главная</a>
-        <a class="p-2 btn btn-outline-primary" href="{% url 'blog:blog_create' %}">Добавить пост</a>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:home' %}">Онлайн магазин</a>
+        {% if user.is_authenticated %}
+            {% if perms.blog.add_blogpost %}
+                <a class="p-2 btn btn-outline-primary" href="{% url 'blog:blog_create' %}">Добавить пост</a>
+            {% endif %}
+                <form method="post" action="{% url 'users:logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="p-2 btn btn-outline-danger">Выйти</button>
+                </form>
+                <a class="p-2 btn btn-outline-secondary" href="{% url 'users:edit' %}">{{ user.username }}</a>
+            {% else %}
+                <a class="p-2 btn btn-outline-primary" href="{% url 'users:login' %}">Вход</a>
+                <a class="p-2 btn btn-outline-primary" href="{% url 'users:register' %}">Регистрация</a>
+            {% endif %}
     </nav>
 </div>
 </header>

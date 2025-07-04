@@ -12,9 +12,13 @@
     <p>Создан: {{blog.created_at|date:"d M Y"}}</p>
     <p>Опубликован: {{blog.publication}}</p>
     <p>Количество просмотров: {{blog.views_count}}</p>
-    <a href="{% url 'blog:blog_edit' blog.pk %}" class="btn btn-primary">Изменить</a>
     <a href="{% url 'blog:blog_list' %}" class="btn btn-secondary">Назад</a>
+    {% if perms.blog.change_blogpost %}
+    <a href="{% url 'blog:blog_edit' blog.pk %}" class="btn btn-primary">Изменить</a>
+    {% endif %}
+    {% if perms.blog.delete_blogpost %}
     <a href="{% url 'blog:blog_delete' blog.pk %}" class="btn btn-danger">Удалить</a>
+    {% endif %}
 </div>
 <script src="/static/js/bootstrap.bundle.min.js"></script>
 {% endblock %}

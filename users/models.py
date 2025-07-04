@@ -28,3 +28,7 @@ class CustomUser(AbstractUser):
         :return: Электронная почта
         """
         return self.email
+
+    class Meta:
+        verbose_name = "пользователь"
+        verbose_name_plural = "пользователи"

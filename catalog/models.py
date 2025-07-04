@@ -1,5 +1,7 @@
 from django.db import models
 
+from users.models import CustomUser
+
 
 class Category(models.Model):
     """
@@ -37,15 +39,21 @@ class Product(models.Model):
         price(float): Цена продукта
         created_at(datetime): Дата и время создания продукта
         updated_at(datetime): Дата и время последнего изменения продукта
+        publication(bool): Публикация продукта
+        owner(ForeignKey): Связь с пользователем, который создал продукт
     """
 
     name: str = models.CharField(max_length=150, verbose_name="Наименование")
     description: str = models.TextField(verbose_name="Описание", blank=True, null=True)
     image = models.ImageField(upload_to="images/", verbose_name="Изображение", blank=True, null=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="category", verbose_name="Категория")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="products", verbose_name="Категория")
     price: float = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата изменения")
+    publication = models.BooleanField(verbose_name="Публиковано", default=False)
+    owner = models.ForeignKey(
+        CustomUser, on_delete=models.SET_NULL, null=True, related_name="owned_products", verbose_name="Владелец"
+    )
 
     def __str__(self) -> str:
         """
@@ -58,6 +66,9 @@ class Product(models.Model):
         verbose_name = "продукт"
         verbose_name_plural = "продукты"
         ordering = ["name"]
+        permissions = [
+            ("can_unpublish_product", "Can unpublish product"),
+        ]
 
 
 class Contact(models.Model):
