@@ -103,7 +103,7 @@ class ProductCreateViews(LoginRequiredMixin, CreateView):
         Устанавливает владельца на текущего пользователя.
         """
 
-        product = form.save()
+        product = form.save(commit=False)
         user = self.request.user
         product.owner = user
         product.save()
@@ -153,6 +153,6 @@ class ProductDeleteViews(LoginRequiredMixin, DeleteView):
         """Проверка, что у пользователя есть доступ к удалению продукта"""
         product = self.get_object()
         user = self.request.user
-        if not (user == product.owner or user.has_perm('catalog.delete_product')):
+        if not (user == product.owner or user.has_perm("catalog.delete_product")):
             return HttpResponseForbidden("У вас нет прав удалить продукт")
         return super().dispatch(request, *args, **kwargs)
