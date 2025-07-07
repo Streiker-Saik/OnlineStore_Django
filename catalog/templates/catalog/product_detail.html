@@ -10,7 +10,9 @@
     <img src="{{ product.image | media_filter }}" class="img-thumbnail" style="max-width: 200px; height: auto;"
          alt="{{ product.name }}">
     <p>Описание: {{product.description}}</p>
-    <p>Категория: {{category.name}}</p>
+    <p>
+        Категория: <a href="{% url 'catalog:product_by_category' category.pk %}">{{category.name}}</a>
+    </p>
     <p>Цена: {{product.price}} руб</p>
     <p>Создан: {{product.created_at|date:"d M Y"}}</p>
     <p>Изменен: {{product.updated_at|date:"d M Y"}}</p>
