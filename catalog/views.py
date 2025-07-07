@@ -10,6 +10,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from catalog.forms import ProductForm
 from catalog.models import Category, Contact, Product
+
 from .services import DecoratorsService, ProductService
 
 cache_decorator = DecoratorsService.get_cache_decorator()
@@ -63,6 +64,7 @@ class ProductsByCategoryListViews(ListView):
     Категория добавляется в контекст.
     Порядок отображения продуктов - от нового к старому (по полю updated_at).
     """
+
     model = Product
     template_name = "catalog/products_by_category.html"
     paginate_by = 4
@@ -75,7 +77,7 @@ class ProductsByCategoryListViews(ListView):
         Если прав нет, он видит только опубликованные продукты.
         :return: QuerySet продуктов по категории, отсортированных по дате обновления в порядке убывания.
         """
-        category_id = self.kwargs['pk']
+        category_id = self.kwargs["pk"]
         user = self.request.user
         products = ProductService.get_products_by_category(category_id)
         products = ProductService.filter_products_by_permission(products, user)
@@ -84,7 +86,7 @@ class ProductsByCategoryListViews(ListView):
     def get_context_data(self, **kwargs):
         """Добавляем в контекст текущую категорию"""
         context = super().get_context_data(**kwargs)
-        category = get_object_or_404(Category, pk=self.kwargs['pk'])
+        category = get_object_or_404(Category, pk=self.kwargs["pk"])
         context["category"] = category
         return context
 
@@ -209,6 +211,7 @@ class CategoryListViews(ListView):
     Отображает список продуктов в шаблоне categories_list.html.
     Порядок отображения категорий - по алфавиту (по полю name)
     """
+
     model = Category
     template_name = "catalog/categories_list.html"
     ordering = ["name"]

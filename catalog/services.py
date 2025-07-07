@@ -7,6 +7,7 @@ from django.views.decorators.cache import cache_page
 
 from config.settings import CACHE_ENABLED
 from users.models import CustomUser
+
 from .models import Product
 
 
@@ -26,7 +27,7 @@ class DecoratorsService:
         :return: Декоратор для кеширования.
         """
         if cached_enable:
-            cache_decorator = method_decorator(cache_page(60 * 15), name='dispatch')
+            cache_decorator = method_decorator(cache_page(60 * 15), name="dispatch")
         else:
             cache_decorator = lambda view: view
         return cache_decorator
