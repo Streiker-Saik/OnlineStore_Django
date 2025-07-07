@@ -42,15 +42,20 @@
     - [Model_Category](#model_category)
     - [Model_Product](#model_product)
     - [Model_Contact](#model_contact)
+  - [Services catalog](#services-catalog)
+    - [DecoratorsService](#decoratorsservice)
+    - [ProductService](#productservice)
   - [Urls catalog](#urls-catalog)
   - [Views catalog](#views-catalog)
     - [PublishProductViews](#publishproductviews)
     - [ProductsListViews](#productslistviews)
+    - [ProductsByCategoryListViews](#productsbycategorylistviews)
     - [ContactsCreateView](#contactscreateview)
     - [ProductDetailViews](#productdetailviews)
     - [ProductCreateViews](#productcreateviews)
     - [ProductUpdateViews](#productupdateviews)
     - [ProductDeleteView](#productdeleteview)
+    - [CategoryListViews](#categorylistviews)
   - [Кастомные команды](#кастомные-команды)
 
    
@@ -123,6 +128,10 @@ poetry add --group lint flake8 black isort mypy ipython
 ```bash
 python manage.py runserver
 ```
+! Если включено кэширования(обязательно запустить сервер redis)
+```bash
+redis-server
+```
 
 [<- на начало](#содержание)
 
@@ -177,13 +186,15 @@ OnlineStore_Django/
 |   ├── templates/ # шаблоны html
 |   |   └── catalog/
 |   |   |   ├── base.html # базовый шаблон
-|   |   |   ├── contact.html
+|   |   |   ├── categories_list.html # шаблон списка категорий
+|   |   |   ├── contact.html 
 |   |   |   ├── footer.html # нижняя часть страницы
 |   |   |   ├── header.html # верхняя часть страницы(меню)
-|   |   |   ├── home.html
-|   |   |   ├── product_confirm_delete.html # шаблон для удаления прлодукта
+|   |   |   ├── home.html # шаблон списка продуктов
+|   |   |   ├── product_confirm_delete.html # шаблон для удаления продукта
 |   |   |   ├── product_detail.html # шаблон для детальной информации о продукте
-|   |   |   └── product_form.html # шаблон для создания/изменения продукта
+|   |   |   ├── product_form.html # шаблон для создания/изменения продукта
+|   |   |   └── products_by_category.html # шаблон отображения продуктов по категории
 |   ├── templatetags/ 
 |   |   └── my_tags.py
 |   ├── __init__.py
@@ -191,6 +202,7 @@ OnlineStore_Django/
 |   ├── apps.py
 |   ├── forms.py # формы
 |   ├── models.py # модели БД
+|   ├── services.py # сервисный слой
 |   ├── tests.py 
 |   ├── urls.py # маршрутизация приложения
 |   └── views.py # конструктор контроллеров
@@ -405,6 +417,24 @@ http://127.0.0.1:8000/blogs/(pk)>/delete/
 
 [<- на начало](#содержание)
 
+## Services catalog:
+### DecoratorsService:
+Сервисный класс для работы с декораторами  
+Методы:
+- get_cache_decorator(cached_enable: bool = CACHE_ENABLED) -> Callable:  
+Возвращает декоратор для кеширования.
+### ProductService:
+Сервисный класс работы с продуктами  
+Методы:
+- get_products_by_category(category_id: int) -> QuerySet[Product]:  
+Возвращает список всех продуктов в указанной категории.
+- get_products_from_cache() -> QuerySet[Product]:  
+Возвращает данные по продуктам из кэша, если кэш пуст, получает данные из БД.
+- filter_products_by_permission(products: QuerySet, user: CustomUser) -> QuerySet:  
+Фильтрация продуктов по правам пользователя.
+
+[<- на начало](#содержание)
+
 ## Urls catalog
 - **Главная страница:** http://127.0.0.1:8000/
 - **Страница для администратора:** http://127.0.0.1:8000/admin/
@@ -423,6 +453,9 @@ http://127.0.0.1:8000/blogs/(pk)>/delete/
 - **Страница отмены публикации:** http://127.0.0.1:8000/product/(pk)/unpublish/
   - где (pk) - это, целое число PrimaryKey, ID продукта
   - **Доступ:** Только зарегистрированным пользователям
+- **Страница списка категорий:** http://127.0.0.1:8000/category/
+- **Страница отмены публикации:** http://127.0.0.1:8000/category/(pk)/products/
+  - где (pk) - это, целое число PrimaryKey, ID категории
 
 [<- на начало](#содержание)
 
@@ -435,6 +468,11 @@ http://127.0.0.1:8000/blogs/(pk)>/delete/
 Отображает список продуктов в шаблоне home.html с пагинацией.
 Отображаются только опубликованные продукты (по полю publication)
 Порядок отображения продуктов - от нового к старому (по полю updated_at)
+### ProductsByCategoryListViews
+Класс отвечающий за предоставление продуктов в категории.
+Отображает список продуктов в шаблоне products_by_category.html с пагинацией.
+Категория добавляется в контекст.
+Порядок отображения продуктов - от нового к старому (по полю updated_at).
 ### ContactsCreateView:
 Класс отвечающий за создание контактов.
 Позволяет пользователям отправлять свои контактные данные через форму, а также сохраняет их в модели Contact. 
@@ -451,18 +489,22 @@ http://127.0.0.1:8000/blogs/(pk)>/delete/
 После успешного создания перенаправляет на главную страницу.
 Создание возможно только с правом add_product.
 Автоматически указывает владельца продукта.
-## ProductUpdateViews:
+### ProductUpdateViews:
 **Доступ только зарегистрированным пользователям**  
 Класс отвечающий за изменения продукта.
 Позволяет пользователям редактировать продукты через форму.
 После успешного создания перенаправляет на детальную информацию о продукте.
 Только создатель или пользователь с наличием прав может изменить продукт.
-## ProductDeleteView:
+### ProductDeleteView:
 **Доступ только зарегистрированным пользователям**  
 Класс отвечающий за удаление продукта.
 После успешного удаления перенаправляет на список блогов.
 Удаление возможно только с правом delete_product.
 Только создатель или пользователь с наличием прав может удалить продукт.
+### CategoryListViews:
+Класс отвечающий за представление списка категорий.
+Отображает список продуктов в шаблоне categories_list.html.
+Порядок отображения категорий - по алфавиту (по полю name)
 
 [<- на начало](#содержание)
 
