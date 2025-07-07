@@ -1,0 +1,16 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}Категории{% endblock %}
+
+{% load my_tags %}
+{% block content %}
+<div class="container">
+    <div class="d-grid gap-2">
+        {% for category in categories %}
+                <a href="{% url 'catalog:product_by_category' category.pk %}" class="btn btn-outline-secondary">
+                    {{ category.name }}
+                </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
