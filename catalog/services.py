@@ -8,7 +8,7 @@ from django.views.decorators.cache import cache_page
 from config.settings import CACHE_ENABLED
 from users.models import CustomUser
 
-from .models import Product
+from .models import Product, Category
 
 
 class DecoratorsService:
@@ -83,3 +83,21 @@ class ProductService:
         if not (user.has_perm("catalog.can_unpublish_product") or user.is_superuser):
             products = products.filter(publication=True)
         return products
+
+
+class CategoryService:
+    """
+    Сервисный класс работы с категориями
+    Методы:
+        get_all_categories() -> QuerySet:
+            Возвращает список всех продуктов в указанной категории.
+    """
+
+    @staticmethod
+    def get_all_categories() -> QuerySet:
+        """
+        Получает все категории, отсортированные по названию.
+        :return: QuerySet продуктов из кэша
+        """
+        categories = Category.objects.all().order_by('name')
+        return categories

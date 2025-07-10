@@ -5,15 +5,31 @@ from django.db.models import QuerySet
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, ListView, View
+from django.views.generic import DetailView, ListView, View, TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from catalog.forms import ProductForm
 from catalog.models import Category, Contact, Product
 
-from .services import DecoratorsService, ProductService
+from .services import DecoratorsService, ProductService, CategoryService
 
 cache_decorator = DecoratorsService.get_cache_decorator()
+
+
+class BaseView(View):
+    """
+    Базовое представление для добавления общей информации в контекст представлений.
+    Метод:
+        get_context_data(self, **kwargs) -> dict:
+            Добавляем в контекст все категории
+    """
+
+    def get_context_data(self, **kwargs) -> dict:
+        """Добавляем в контекст все категории"""
+        context = {}
+        categories = CategoryService.get_all_categories()
+        context['categories'] = categories
+        return context
 
 
 class PublishProductViews(LoginRequiredMixin, View):
@@ -31,7 +47,7 @@ class PublishProductViews(LoginRequiredMixin, View):
         return redirect("catalog:home")
 
 
-class ProductsListViews(ListView):
+class ProductsListViews(BaseView, ListView):
     """
     Класс отвечающий за представление списка продукта.
     Отображает список продуктов в шаблоне home.html с пагинацией.
@@ -57,7 +73,8 @@ class ProductsListViews(ListView):
         return products
 
 
-class ProductsByCategoryListViews(ListView):
+
+class ProductsByCategoryListViews(BaseView, ListView):
     """
     Класс отвечающий за предоставление продуктов в категории.
     Отображает список продуктов в шаблоне products_by_category.html с пагинацией.
@@ -91,7 +108,7 @@ class ProductsByCategoryListViews(ListView):
         return context
 
 
-class ContactsCreateView(CreateView):
+class ContactsCreateView(BaseView, CreateView):
     """
     Класс отвечающий за создание контактов.
     Позволяет пользователям отправлять свои контактные данные через форму, а также сохраняет их в модели Contact.
@@ -105,7 +122,7 @@ class ContactsCreateView(CreateView):
 
 
 @cache_decorator
-class ProductDetailViews(LoginRequiredMixin, DetailView):
+class ProductDetailViews(LoginRequiredMixin, BaseView, DetailView):
     """
     Класс отвечающий за получение детальной информации о продукте.
     Отображает полные данные о выбранном продукте в шаблоне product_detail.html.
@@ -122,7 +139,7 @@ class ProductDetailViews(LoginRequiredMixin, DetailView):
         return context
 
 
-class ProductCreateViews(LoginRequiredMixin, CreateView):
+class ProductCreateViews(LoginRequiredMixin, BaseView, CreateView):
     """
     Класс отвечающий за создание продукта.
     Позволяет пользователям добавлять новые продукты через форму.
@@ -137,12 +154,6 @@ class ProductCreateViews(LoginRequiredMixin, CreateView):
 
     # permission_required = "catalog.add_product" PermissionRequiredMixin,
 
-    def get_context_data(self, **kwargs):
-        """Добавляет категории в контекст"""
-
-        context = super().get_context_data(**kwargs)
-        context["categories"] = Category.objects.all()
-        return context
 
     def form_valid(self, form):
         """
@@ -157,7 +168,7 @@ class ProductCreateViews(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ProductUpdateViews(LoginRequiredMixin, UpdateView):
+class ProductUpdateViews(LoginRequiredMixin, BaseView, UpdateView):
     """
     Класс отвечающий за изменения продукта.
     Позволяет пользователям редактировать продукты через форму.
@@ -182,7 +193,7 @@ class ProductUpdateViews(LoginRequiredMixin, UpdateView):
         return reverse_lazy("catalog:product_detail", kwargs={"pk": self.object.pk})
 
 
-class ProductDeleteViews(LoginRequiredMixin, DeleteView):
+class ProductDeleteViews(LoginRequiredMixin, BaseView, DeleteView):
     """
     Класс отвечающий за удаление продукта
     После успешного удаления перенаправляет на список блогов
@@ -205,7 +216,7 @@ class ProductDeleteViews(LoginRequiredMixin, DeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class CategoryListViews(ListView):
+class CategoryListViews(BaseView, ListView):
     """
     Класс отвечающий за представление списка категорий.
     Отображает список продуктов в шаблоне categories_list.html.
