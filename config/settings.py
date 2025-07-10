@@ -151,3 +151,12 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 LOGIN_URL = "users:login"
 LOGIN_REDIRECT_URL = "catalog:home"
+
+CACHE_ENABLED = True if os.getenv("CACHE_ENABLED") == "True" else False
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": os.getenv("CACHES_LOCATION"),
+        }
+    }

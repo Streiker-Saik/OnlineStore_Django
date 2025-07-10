@@ -1,12 +1,35 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from typing import Optional
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import QuerySet
 from django.http import HttpResponse, HttpResponseForbidden
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, ListView, View
+from django.views.generic import DetailView, ListView, View, TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from catalog.forms import ProductForm
 from catalog.models import Category, Contact, Product
+
+from .services import DecoratorsService, ProductService, CategoryService
+
+cache_decorator = DecoratorsService.get_cache_decorator()
+
+
+class BaseView(View):
+    """
+    Базовое представление для добавления общей информации в контекст представлений.
+    Метод:
+        get_context_data(self, **kwargs) -> dict:
+            Добавляем в контекст все категории
+    """
+
+    def get_context_data(self, **kwargs) -> dict:
+        """Добавляем в контекст все категории"""
+        context = {}
+        categories = CategoryService.get_all_categories()
+        context['categories'] = categories
+        return context
 
 
 class PublishProductViews(LoginRequiredMixin, View):
@@ -24,7 +47,7 @@ class PublishProductViews(LoginRequiredMixin, View):
         return redirect("catalog:home")
 
 
-class ProductsListViews(ListView):
+class ProductsListViews(BaseView, ListView):
     """
     Класс отвечающий за представление списка продукта.
     Отображает список продуктов в шаблоне home.html с пагинацией.
@@ -35,17 +58,57 @@ class ProductsListViews(ListView):
     template_name = "catalog/home.html"
     paginate_by = 4
     context_object_name = "products"
+    ordering = ["-updated_at"]
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
+        """
+        Переопределение метода get_queryset для получения списка продуктов.
+        Если у пользователя есть права на закрытие публикации, он видит все продукты.
+        Если прав нет, он видит только опубликованные продукты.
+        :return: QuerySet продуктов, отсортированных по дате обновления в порядке убывания.
+        """
         user = self.request.user
-        if not (user.has_perm("catalog.can_unpublish_product") or user.is_superuser):
-            queryset = Product.objects.filter(publication=True).order_by("-updated_at")
-        else:
-            queryset = Product.objects.order_by("-updated_at")
-        return queryset
+        products = ProductService.get_products_from_cache()
+        products = ProductService.filter_products_by_permission(products, user)
+        return products
 
 
-class ContactsCreateView(CreateView):
+
+class ProductsByCategoryListViews(BaseView, ListView):
+    """
+    Класс отвечающий за предоставление продуктов в категории.
+    Отображает список продуктов в шаблоне products_by_category.html с пагинацией.
+    Категория добавляется в контекст.
+    Порядок отображения продуктов - от нового к старому (по полю updated_at).
+    """
+
+    model = Product
+    template_name = "catalog/products_by_category.html"
+    paginate_by = 4
+    context_object_name = "products"
+
+    def get_queryset(self) -> QuerySet:
+        """
+        Переопределение метода get_queryset для получения списка продуктов по категории.
+        Если у пользователя есть права на закрытие публикации, он видит все продукты.
+        Если прав нет, он видит только опубликованные продукты.
+        :return: QuerySet продуктов по категории, отсортированных по дате обновления в порядке убывания.
+        """
+        category_id = self.kwargs["pk"]
+        user = self.request.user
+        products = ProductService.get_products_by_category(category_id)
+        products = ProductService.filter_products_by_permission(products, user)
+        return products
+
+    def get_context_data(self, **kwargs):
+        """Добавляем в контекст текущую категорию"""
+        context = super().get_context_data(**kwargs)
+        category = get_object_or_404(Category, pk=self.kwargs["pk"])
+        context["category"] = category
+        return context
+
+
+class ContactsCreateView(BaseView, CreateView):
     """
     Класс отвечающий за создание контактов.
     Позволяет пользователям отправлять свои контактные данные через форму, а также сохраняет их в модели Contact.
@@ -58,7 +121,8 @@ class ContactsCreateView(CreateView):
     success_url = reverse_lazy("catalog:contacts")
 
 
-class ProductDetailViews(LoginRequiredMixin, DetailView):
+@cache_decorator
+class ProductDetailViews(LoginRequiredMixin, BaseView, DetailView):
     """
     Класс отвечающий за получение детальной информации о продукте.
     Отображает полные данные о выбранном продукте в шаблоне product_detail.html.
@@ -75,7 +139,7 @@ class ProductDetailViews(LoginRequiredMixin, DetailView):
         return context
 
 
-class ProductCreateViews(LoginRequiredMixin, CreateView):
+class ProductCreateViews(LoginRequiredMixin, BaseView, CreateView):
     """
     Класс отвечающий за создание продукта.
     Позволяет пользователям добавлять новые продукты через форму.
@@ -90,12 +154,6 @@ class ProductCreateViews(LoginRequiredMixin, CreateView):
 
     # permission_required = "catalog.add_product" PermissionRequiredMixin,
 
-    def get_context_data(self, **kwargs):
-        """Добавляет категории в контекст"""
-
-        context = super().get_context_data(**kwargs)
-        context["categories"] = Category.objects.all()
-        return context
 
     def form_valid(self, form):
         """
@@ -103,14 +161,14 @@ class ProductCreateViews(LoginRequiredMixin, CreateView):
         Устанавливает владельца на текущего пользователя.
         """
 
-        product = form.save()
+        product = form.save(commit=False)
         user = self.request.user
         product.owner = user
         product.save()
         return super().form_valid(form)
 
 
-class ProductUpdateViews(LoginRequiredMixin, UpdateView):
+class ProductUpdateViews(LoginRequiredMixin, BaseView, UpdateView):
     """
     Класс отвечающий за изменения продукта.
     Позволяет пользователям редактировать продукты через форму.
@@ -135,7 +193,7 @@ class ProductUpdateViews(LoginRequiredMixin, UpdateView):
         return reverse_lazy("catalog:product_detail", kwargs={"pk": self.object.pk})
 
 
-class ProductDeleteViews(LoginRequiredMixin, DeleteView):
+class ProductDeleteViews(LoginRequiredMixin, BaseView, DeleteView):
     """
     Класс отвечающий за удаление продукта
     После успешного удаления перенаправляет на список блогов
@@ -153,6 +211,19 @@ class ProductDeleteViews(LoginRequiredMixin, DeleteView):
         """Проверка, что у пользователя есть доступ к удалению продукта"""
         product = self.get_object()
         user = self.request.user
-        if not (user == product.owner or user.has_perm('catalog.delete_product')):
+        if not (user == product.owner or user.has_perm("catalog.delete_product")):
             return HttpResponseForbidden("У вас нет прав удалить продукт")
         return super().dispatch(request, *args, **kwargs)
+
+
+class CategoryListViews(BaseView, ListView):
+    """
+    Класс отвечающий за представление списка категорий.
+    Отображает список продуктов в шаблоне categories_list.html.
+    Порядок отображения категорий - по алфавиту (по полю name)
+    """
+
+    model = Category
+    template_name = "catalog/categories_list.html"
+    ordering = ["name"]
+    context_object_name = "categories"

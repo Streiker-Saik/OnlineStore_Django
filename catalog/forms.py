@@ -1,3 +1,5 @@
+from typing import Optional
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models.fields.files import ImageFieldFile
@@ -18,7 +20,10 @@ class ProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        exclude = ['publication', 'owner',]
+        exclude = [
+            "publication",
+            "owner",
+        ]
 
     def __init__(self, *args, **kwargs):
         """Инициализация стилизации форм"""
@@ -65,7 +70,7 @@ class ProductForm(forms.ModelForm):
             raise ValidationError("Цена не может быть меньше 0")
         return price
 
-    def clean_image(self) -> "ImageFieldFile":
+    def clean_image(self) -> Optional["ImageFieldFile"]:
         """
         Валидация изображения
         Проверка расширения и размера
@@ -73,6 +78,8 @@ class ProductForm(forms.ModelForm):
         :raise ValidationError: Файл не форматов JPG/PNG или превышает 5 МБ
         """
         image = self.cleaned_data.get("image")
+        if not image:
+            return None
         if not (image.name.endswith("png") or image.name.endswith("jpg") or image.name.endswith("jpeg")):
             raise ValidationError("Файл должен быть форма JPG/PNG")
         if image.size > 5 * 1024 * 1024:
